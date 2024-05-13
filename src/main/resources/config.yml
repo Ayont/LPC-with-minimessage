@@ -12,7 +12,9 @@
 # {suffixes} - the player's suffixes sorted by the highest priority
 # {username-color} - the player's or the group's username color
 # {message-color} - the player's or the group's message color
-#
+
+# WARNING: Prefixes, Suffixes, message-color etc. needs to be Minimessage Colorcodes and not Legacy!
+
 # To reload the configuration, run '/lpc reload' command. Make sure you have the 'lpc.reload' permission assigned.
 # More information can be found at the Github.
 chat-format: "{prefix}{name}<reset>: {message}"
