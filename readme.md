@@ -2,7 +2,7 @@
 
 A chat formatting plugin for LuckPerms!
 
-## Credits: https://github.com/wikmor/LPC
+## Credits: https://github.com/wikmor/LPC (@wikmor)
 
 
 ## Config.yml
