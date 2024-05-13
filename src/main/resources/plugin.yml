@@ -1,0 +1,14 @@
+name: LPC
+version: '${version}'
+main: de.ayont.lpc.LPC
+api-version: '1.20'
+authors: [wikmor]
+depend: [LuckPerms]
+softdepend: [PlaceholderAPI]
+description: Edit version of wikmors LPC plugin (Minimessage Support 1.20.6)
+website: https://www.spigotmc.org/resources/lpc-chat-formatter-1-7-10-1-20.68965/
+commands:
+  lpc:
+    description: Reload the configuration.
+    permission: lpc.reload
+    usage: "Usage: /lpc reload"
