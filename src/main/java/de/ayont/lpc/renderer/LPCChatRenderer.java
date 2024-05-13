@@ -1,7 +1,7 @@
 package de.ayont.lpc.renderer;
 
 import de.ayont.lpc.LPC;
-import me.clip.placeholderapi.PlaceholderAPI;
+import io.papermc.paper.chat.ChatRenderer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -16,10 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class LPCChatRenderer implements io.papermc.paper.chat.ChatRenderer {
+public class LPCChatRenderer implements ChatRenderer {
 
-    private LuckPerms luckPerms;
+    private final LuckPerms luckPerms;
     private final LPC plugin;
     private final MiniMessage miniMessage;
 
@@ -55,20 +57,15 @@ public class LPCChatRenderer implements io.papermc.paper.chat.ChatRenderer {
                     .replace("{message}", plainMessage);
 
         }
-        if(!source.hasPermission("lpc.chatcolor"))
-            plainMessage = MiniMessage.miniMessage().stripTags(plainMessage);
 
-        if(containsPlayerName(plainMessage)) {
+
+        if (containsPlayerName(plainMessage)) {
             List<String> playerNames = getPlayerNamesFromMessage(plainMessage);
             for (String playerName : playerNames) {
-                if(!playerName.contentEquals(source.getName()))
-                    plainMessage = plainMessage.replace(playerName, "%playertag_" + playerName + "%");
+                if (!playerName.contentEquals(source.getName()))
+                    format = format.replace(playerName, "%playertag_" + playerName + "%");
             }
         }
-
-
-
-        String placeholderMessage = PlaceholderAPI.setPlaceholders(source, plainMessage);
 
         return miniMessage.deserialize(format);
     }
