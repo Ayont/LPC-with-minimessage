@@ -66,9 +66,8 @@ group-formats:
 ### Chat Format
 ![grafik](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/f8394ef3-286a-41f9-a86a-a88874ad1f76)
 
- This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
-
 ### [ITEM] Placeholder
 ![grafik](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/ab779f59-f2d1-4b41-8996-5d6df52f4ee0)
 
 
+This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
