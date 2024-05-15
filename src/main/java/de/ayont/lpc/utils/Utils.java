@@ -2,6 +2,9 @@ package de.ayont.lpc.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class Utils {
 
@@ -11,5 +14,14 @@ public class Utils {
 
     public static boolean contains(Component component, String s) {
         return get(component).toLowerCase().contains(s);
+    }
+
+    @Nullable
+    public static UUID getUUID(String string) {
+        try {
+            return UUID.fromString(string);
+        } catch (IllegalArgumentException ignored) {
+            return null;
+        }
     }
 }
