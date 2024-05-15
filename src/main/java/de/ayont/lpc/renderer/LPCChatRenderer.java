@@ -2,6 +2,7 @@ package de.ayont.lpc.renderer;
 
 import de.ayont.lpc.LPC;
 import io.papermc.paper.chat.ChatRenderer;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -10,6 +11,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -19,6 +21,7 @@ public class LPCChatRenderer implements ChatRenderer {
     private final LuckPerms luckPerms;
     private final LPC plugin;
     private final MiniMessage miniMessage;
+    private final boolean hasPapi;
 
     private final Map<String, String> legacyToMiniMessageColors = new HashMap<>() {
         {
@@ -45,6 +48,8 @@ public class LPCChatRenderer implements ChatRenderer {
         this.luckPerms = LuckPermsProvider.get();
         this.plugin = plugin;
         this.miniMessage = MiniMessage.builder().build();
+        PluginManager pluginManager = plugin.getServer().getPluginManager();
+        hasPapi = pluginManager.getPlugin("PlaceholderAPI") != null;
     }
 
     @Override
@@ -76,14 +81,18 @@ public class LPCChatRenderer implements ChatRenderer {
                     .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
                     .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
 
-                if (!hasPermission) {
-                    for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                        plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
-                    }
+            if (!hasPermission) {
+                for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
+                    plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
                 }
+            }
 
 
             format = format.replace("{message}", plainMessage);
+
+            if (hasPapi) {
+                format = PlaceholderAPI.setPlaceholders(source, format);
+            }
         }
 
 
