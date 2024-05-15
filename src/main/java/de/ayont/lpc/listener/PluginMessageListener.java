@@ -1,7 +1,7 @@
 package de.ayont.lpc.listener;
 
 import de.ayont.lpc.LPC;
-import de.ayont.lpc.utils.UUIDUtil;
+import de.ayont.lpc.utils.Utils;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
 
                 if (type.equals("Message")) {
                     String source = dataInputStream.readUTF();
-                    UUID uuid = UUIDUtil.getUUID(dataInputStream.readUTF());
+                    UUID uuid = Utils.getUUID(dataInputStream.readUTF());
                     String name = dataInputStream.readUTF();
                     String format = dataInputStream.readUTF();
                     String message = dataInputStream.readUTF();
@@ -48,7 +48,7 @@ public class PluginMessageListener implements org.bukkit.plugin.messaging.Plugin
                         List<UUID> uuidList = new ArrayList<>();
 
                         for (String uuidString : players.split(",")) {
-                            UUID uuidPlayer = UUIDUtil.getUUID(uuidString);
+                            UUID uuidPlayer = Utils.getUUID(uuidString);
 
                             if (uuidPlayer != null) {
                                 uuidList.add(uuidPlayer);
