@@ -70,4 +70,16 @@ group-formats:
 ![grafik](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/ab779f59-f2d1-4b41-8996-5d6df52f4ee0)
 
 
+## INSTALLATION
+1. Stop your server.
+2. Download and drag the plugin .jar file into your plugins folder.
+3. Start your server to generate config files.
+4. Edit config.yml to your liking.
+5. Type: /lpc reload, to reload the plugin. ✅
+
+
+NEED TO KNOW!
+PlaceholderAPI will work soon, not yet for this version!
+
+
 This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
