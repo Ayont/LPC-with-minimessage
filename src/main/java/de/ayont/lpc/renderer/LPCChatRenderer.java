@@ -20,7 +20,7 @@ public class LPCChatRenderer implements ChatRenderer {
     private final LPC plugin;
     private final MiniMessage miniMessage;
 
-    private final Map<String, String> legacyToMiniMessageColors = new HashMap<String, String>() {
+    private final Map<String, String> legacyToMiniMessageColors = new HashMap<>() {
         {
             put("&0", "<black>");
             put("&1", "<dark_blue>");
@@ -73,8 +73,8 @@ public class LPCChatRenderer implements ChatRenderer {
                     .replace("{world}", source.getWorld().getName())
                     .replace("{name}", source.getName())
                     .replace("{displayname}", source.getDisplayName())
-                    .replace("{username-color}", metaData.getMetaValue("username-color") != null ? metaData.getMetaValue("username-color") : "")
-                    .replace("{message-color}", metaData.getMetaValue("message-color") != null ? metaData.getMetaValue("message-color") : "");
+                    .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
+                    .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
 
                 if (!hasPermission) {
                     for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
