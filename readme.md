@@ -78,8 +78,13 @@ group-formats:
 5. Type: /lpc reload, to reload the plugin. ✅
 
 
-NEED TO KNOW!
-PlaceholderAPI will work soon, not yet for this version!
 
 
-This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
+# NEED TO KNOW!
+* ### PlaceholderAPI will work soon, not yet for this version!
+
+
+
+
+
+- This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
