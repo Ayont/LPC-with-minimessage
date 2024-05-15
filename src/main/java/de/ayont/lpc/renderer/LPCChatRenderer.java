@@ -9,15 +9,10 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class LPCChatRenderer implements ChatRenderer {
 
@@ -25,7 +20,6 @@ public class LPCChatRenderer implements ChatRenderer {
     private final LPC plugin;
     private final MiniMessage miniMessage;
 
-    // legacy color codes to MiniMessage color codes conversion map
     private final Map<String, String> legacyToMiniMessageColors = new HashMap<String, String>() {
         {
             put("&0", "<black>");
@@ -92,36 +86,7 @@ public class LPCChatRenderer implements ChatRenderer {
             format = format.replace("{message}", plainMessage);
         }
 
-        if (containsPlayerName(plainMessage)) {
-            List<String> playerNames = getPlayerNamesFromMessage(plainMessage);
-            for (String playerName : playerNames) {
-                if (!playerName.contentEquals(source.getName())) {
-                    format = format.replace(playerName, "%playertag_" + playerName + "%");
-                }
-            }
-        }
 
-        return miniMessage.deserialize(format);
-    }
-
-    public List<String> getPlayerNamesFromMessage(String message) {
-        List<String> names = new ArrayList<>();
-        String[] splitted = message.split(" ");
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (Arrays.stream(splitted).anyMatch(string -> player.getName().contentEquals(string))) {
-                names.add(player.getName());
-            }
-        }
-        return names;
-    }
-
-    private boolean containsPlayerName(String message) {
-        String[] splitted = message.split(" ");
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (Arrays.stream(splitted).anyMatch(string -> player.getName().contentEquals(string))) {
-                return true;
-            }
-        }
-        return false;
+        return miniMessage.deserialize(Objects.requireNonNull(format));
     }
 }
