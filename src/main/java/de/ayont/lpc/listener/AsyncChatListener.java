@@ -6,6 +6,7 @@ import de.ayont.lpc.utils.Utils;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextReplacementConfig;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,6 +30,13 @@ public class AsyncChatListener implements Listener {
         final Player player = event.getPlayer();
         final ItemStack item = player.getInventory().getItemInMainHand();
         final Component displayName = item.getItemMeta() != null && item.getItemMeta().hasDisplayName() ? item.getItemMeta().displayName() : Component.text(item.getType().toString().toLowerCase().replace("_", " "));
+        if (item.getType().equals(Material.AIR)) {
+
+            event.renderer((source, sourceDisplayName, message, viewer) -> lpcChatRenderer.render(source, sourceDisplayName, message, viewer));
+
+            return;
+        }
+
         if (Utils.contains(event.message(), "[item]")) {
             item.getType();
         }
