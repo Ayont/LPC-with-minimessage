@@ -11,6 +11,11 @@ A chat formatting plugin for LuckPerms with Minimessage and other Features!
 ### The Legacy Version » https://github.com/wikmor/LPC (@wikmor)
 
 
+## REQUIRED (DEPENDENCIES)
+[Luckperms](https://www.spigotmc.org/resources/luckperms.28140/) - permissions plugin
+
+[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - extra placeholders (optional)​
+
 ## Config.yml
 ````yml
 # LPC Configuration
@@ -81,10 +86,4 @@ group-formats:
 
 
 # NEED TO KNOW!
-* ### PlaceholderAPI will work soon, not yet for this version!
-
-
-
-
-
 - This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
