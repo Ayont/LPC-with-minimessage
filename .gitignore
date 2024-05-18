@@ -69,3 +69,5 @@ $RECYCLE.BIN/
 .DS_Store
 REBASE.bat
 /.gradle/
+
+/build/*

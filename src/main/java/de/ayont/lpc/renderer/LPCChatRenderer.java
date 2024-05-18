@@ -77,7 +77,7 @@ public class LPCChatRenderer implements ChatRenderer {
                     .replace("{suffixes}", String.join(" ", metaData.getSuffixes().values()))
                     .replace("{world}", source.getWorld().getName())
                     .replace("{name}", source.getName())
-                    .replace("{displayname}", source.getDisplayName())
+                    .replace("{displayname}", PlainTextComponentSerializer.plainText().serialize(source.displayName()))
                     .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
                     .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
 

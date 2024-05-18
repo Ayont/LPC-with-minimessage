@@ -24,3 +24,6 @@ chat-format: "{prefix}{name}<dark_gray> »<reset> {message}"
 group-formats:
 #  default: "[default] {name}<dark_gray> »<reset>  {message}"
 #  admin: "[admin] {name}<dark_gray> »<reset>  {message}"
+
+# Should the [item] placeholder be enabled
+use-item-placeholder: false
