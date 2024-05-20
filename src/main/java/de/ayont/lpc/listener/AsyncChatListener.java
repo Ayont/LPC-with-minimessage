@@ -2,7 +2,6 @@ package de.ayont.lpc.listener;
 
 import de.ayont.lpc.LPC;
 import de.ayont.lpc.renderer.LPCChatRenderer;
-import de.ayont.lpc.utils.Utils;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -35,24 +34,22 @@ public class AsyncChatListener implements Listener {
     public void onChat(AsyncChatEvent event) {
 
         final Player player = event.getPlayer();
-        final ItemStack item = player.getInventory().getItemInMainHand();
-        final Component displayName = item.getItemMeta() != null && item.getItemMeta().hasDisplayName() ? item.getItemMeta().displayName() : Component.text(item.getType().toString().toLowerCase().replace("_", " "));
-        if (item.getType().equals(Material.AIR)) {
 
-            event.renderer((source, sourceDisplayName, message, viewer) -> lpcChatRenderer.render(source, sourceDisplayName, message, viewer));
-
+        if(!plugin.getConfig().getBoolean("use-item-placeholder", false) || !player.hasPermission("lpc.itemplaceholder")){
+            event.renderer(lpcChatRenderer);
             return;
         }
 
-        if (Utils.contains(event.message(), "[item]")) {
-            item.getType();
+        final ItemStack item = player.getInventory().getItemInMainHand();
+        final Component displayName = item.getItemMeta() != null && item.getItemMeta().hasDisplayName() ? item.getItemMeta().displayName() : Component.text(item.getType().toString().toLowerCase().replace("_", " "));
+        if (item.getType().equals(Material.AIR) || displayName == null) {
+            event.renderer(lpcChatRenderer);
+            return;
         }
-
-        event.renderer(new LPCChatRenderer(plugin));
 
         event.renderer((source, sourceDisplayName, message, viewer) -> lpcChatRenderer.render(source, sourceDisplayName, message, viewer)
                 .replaceText(TextReplacementConfig.builder().match(compile("\\[item]", CASE_INSENSITIVE))
-                        .replacement(displayName).build()).hoverEvent(item));
+                        .replacement(displayName.hoverEvent(item)).build()));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
