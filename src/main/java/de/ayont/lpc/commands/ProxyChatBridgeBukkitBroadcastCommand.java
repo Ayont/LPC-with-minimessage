@@ -21,7 +21,7 @@ public class ProxyChatBridgeBukkitBroadcastCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
                              @NotNull String string, String[] args) {
         if (commandSender.hasPermission("proxychatbridge.broadcast")) {
-            if (plugin.getServer().getOnlinePlayers().size() > 0) {
+            if (!plugin.getServer().getOnlinePlayers().isEmpty()) {
                 if (args.length > 1) {
                     Player player = commandSender instanceof Player ? (Player) commandSender :
                             plugin.getServer().getOnlinePlayers().iterator().next();
