@@ -44,6 +44,12 @@ chat-format: "{prefix}{name}<dark_gray> »<reset> {message}"
 group-formats:
 #  default: "[default] {name}<dark_gray> »<reset>  {message}"
 #  admin: "[admin] {name}<dark_gray> »<reset>  {message}"
+
+# Should the [item] placeholder be enabled
+use-item-placeholder: true
+
+# Editing Reload-message
+reload-message: "<green>Reloaded LPC Configuration!"
 ````
 
 ## Wiki to the Placeholders ->
