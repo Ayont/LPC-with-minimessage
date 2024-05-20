@@ -26,7 +26,7 @@ group-formats:
 #  admin: "[admin] {name}<dark_gray> »<reset>  {message}"
 
 # Should the [item] placeholder be enabled
-use-item-placeholder: false
+use-item-placeholder: true
 
 # Editing Reload-message
-reloadMessage: "<green>Reloaded LPC Configuration!"
+reload-message: "<green>Reloaded LPC Configuration!"
