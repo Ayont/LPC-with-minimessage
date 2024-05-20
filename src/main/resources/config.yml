@@ -27,3 +27,6 @@ group-formats:
 
 # Should the [item] placeholder be enabled
 use-item-placeholder: false
+
+# Editing Reload-message
+reloadMessage: "<green>Reloaded LPC Configuration!"
