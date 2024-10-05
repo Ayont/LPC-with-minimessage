@@ -67,34 +67,38 @@ public class LPCChatRenderer implements ChatRenderer {
             }
         }
 
-        String formatKey = plugin.getConfig().getString("group-formats." + group);
-        String format = plugin.getConfig().getString(formatKey != null ? formatKey : "chat-format");
+        String formatKey = "group-formats." + group;
+        String format = plugin.getConfig().getString(formatKey);
 
-        if (format != null) {
-            format = format.replace("{prefix}", metaData.getPrefix() != null ? metaData.getPrefix() : "")
-                    .replace("{suffix}", metaData.getSuffix() != null ? metaData.getSuffix() : "")
-                    .replace("{prefixes}", String.join(" ", metaData.getPrefixes().values()))
-                    .replace("{suffixes}", String.join(" ", metaData.getSuffixes().values()))
-                    .replace("{world}", source.getWorld().getName())
-                    .replace("{name}", source.getName())
-                    .replace("{displayname}", PlainTextComponentSerializer.plainText().serialize(source.displayName()))
-                    .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
-                    .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
+        if (format == null) {
+            format = plugin.getConfig().getString("chat-format");
+        }
 
-            if (!hasPermission) {
-                for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                    plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
-                }
+
+        format = format.replace("{prefix}", metaData.getPrefix() != null ? metaData.getPrefix() : "")
+                .replace("{suffix}", metaData.getSuffix() != null ? metaData.getSuffix() : "")
+                .replace("{prefixes}", String.join(" ", metaData.getPrefixes().values()))
+                .replace("{suffixes}", String.join(" ", metaData.getSuffixes().values()))
+                .replace("{world}", source.getWorld().getName())
+                .replace("{name}", source.getName())
+                .replace("{displayname}", PlainTextComponentSerializer.plainText().serialize(source.displayName()))
+                .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
+                .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
+
+
+        if (!hasPermission) {
+            for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
+                plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
             }
+        }
 
 
             format = format.replace("{message}", plainMessage);
 
-            if (hasPapi) {
-                format = PlaceholderAPI.setPlaceholders(source, format);
-            }
+        if (hasPapi) {
+            format = PlaceholderAPI.setPlaceholders(source, format);
         }
 
-        return miniMessage.deserialize(Objects.requireNonNull(format, "Format cannot be null"));
+        return miniMessage.deserialize(format);
     }
 }
