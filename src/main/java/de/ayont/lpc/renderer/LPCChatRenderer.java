@@ -55,7 +55,7 @@ public class LPCChatRenderer implements ChatRenderer {
     @Override
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         final CachedMetaData metaData = this.luckPerms.getPlayerAdapter(Player.class).getMetaData(source);
-        final String group = metaData.getPrimaryGroup();
+        final String group = Objects.requireNonNull(metaData.getPrimaryGroup(), "Primary group cannot be null");
 
         boolean hasPermission = source.hasPermission("lpc.chatcolor");
 
@@ -95,7 +95,6 @@ public class LPCChatRenderer implements ChatRenderer {
             }
         }
 
-
-        return miniMessage.deserialize(Objects.requireNonNull(format));
+        return miniMessage.deserialize(Objects.requireNonNull(format, "Format cannot be null"));
     }
 }
