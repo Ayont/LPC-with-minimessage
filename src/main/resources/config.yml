@@ -22,8 +22,14 @@ chat-format: "{prefix}{name}<dark_gray> »<reset> {message}"
 # Set the format per group.
 # Note: Option for more advanced users. Remove comments to run.
 group-formats:
-#  default: "[default] {name}<dark_gray> »<reset>  {message}"
-#  admin: "[admin] {name}<dark_gray> »<reset>  {message}"
+#  default: "[default] {name}<dark_gray> »<reset> {message}"
+#  admin: "[admin] {name}<dark_gray> »<reset> {message}"
+
+# Set the format per track
+# Note: Group formatting takes priority over track formatting, ensure user isn't in a group with corresponding format to apply track format
+track-formats:
+#  staff_track: "[staff] {name}<dark_gray> »<reset> {message}"
+#  donator_track: "{donator_rank} {name}<dark_gray> »<reset> {message}"
 
 # Should the [item] placeholder be enabled
 use-item-placeholder: true

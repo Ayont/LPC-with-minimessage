@@ -10,6 +10,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.track.Track;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
@@ -71,9 +72,20 @@ public class LPCChatRenderer implements ChatRenderer {
         String format = plugin.getConfig().getString(formatKey);
 
         if (format == null) {
-            format = plugin.getConfig().getString("chat-format");
+            for (String trackName : plugin.getConfig().getConfigurationSection("track-formats").getKeys(false)) {
+                Track track = this.luckPerms.getTrackManager().getTrack(trackName);
+                if (track == null) continue;
+                if (track.containsGroup(group)) {
+                    formatKey = "track-formats." + trackName;
+                    format = plugin.getConfig().getString(formatKey);
+                    break;
+                }
+            }
         }
 
+        if (format == null) {
+            format = plugin.getConfig().getString("chat-format");
+        }
 
         format = format.replace("{prefix}", metaData.getPrefix() != null ? metaData.getPrefix() : "")
                 .replace("{suffix}", metaData.getSuffix() != null ? metaData.getSuffix() : "")
@@ -85,15 +97,13 @@ public class LPCChatRenderer implements ChatRenderer {
                 .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
                 .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
 
-
         if (!hasPermission) {
             for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
                 plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
             }
         }
 
-
-            format = format.replace("{message}", plainMessage);
+        format = format.replace("{message}", plainMessage);
 
         if (hasPapi) {
             format = PlaceholderAPI.setPlaceholders(source, format);
