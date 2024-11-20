@@ -11,6 +11,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
 import net.luckperms.api.track.Track;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
@@ -72,13 +73,16 @@ public class LPCChatRenderer implements ChatRenderer {
         String format = plugin.getConfig().getString(formatKey);
 
         if (format == null) {
-            for (String trackName : plugin.getConfig().getConfigurationSection("track-formats").getKeys(false)) {
-                Track track = this.luckPerms.getTrackManager().getTrack(trackName);
-                if (track == null) continue;
-                if (track.containsGroup(group)) {
-                    formatKey = "track-formats." + trackName;
-                    format = plugin.getConfig().getString(formatKey);
-                    break;
+            ConfigurationSection trackFormatsSection = plugin.getConfig().getConfigurationSection("track-formats");
+            if (trackFormatsSection != null) {
+                for (String trackName : trackFormatsSection.getKeys(false)) {
+                    Track track = this.luckPerms.getTrackManager().getTrack(trackName);
+                    if (track == null) continue;
+                    if (track.containsGroup(group)) {
+                        formatKey = "track-formats." + trackName;
+                        format = plugin.getConfig().getString(formatKey);
+                        break;
+                    }
                 }
             }
         }
