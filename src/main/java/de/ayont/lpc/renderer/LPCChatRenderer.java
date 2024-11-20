@@ -10,6 +10,8 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.track.Track;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +57,7 @@ public class LPCChatRenderer implements ChatRenderer {
     @Override
     public @NotNull Component render(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
         final CachedMetaData metaData = this.luckPerms.getPlayerAdapter(Player.class).getMetaData(source);
-        final String group = metaData.getPrimaryGroup();
+        final String group = Objects.requireNonNull(metaData.getPrimaryGroup(), "Primary group cannot be null");
 
         boolean hasPermission = source.hasPermission("lpc.chatcolor");
 
@@ -67,35 +69,50 @@ public class LPCChatRenderer implements ChatRenderer {
             }
         }
 
-        String formatKey = plugin.getConfig().getString("group-formats." + group);
-        String format = plugin.getConfig().getString(formatKey != null ? formatKey : "chat-format");
+        String formatKey = "group-formats." + group;
+        String format = plugin.getConfig().getString(formatKey);
 
-        if (format != null) {
-            format = format.replace("{prefix}", metaData.getPrefix() != null ? metaData.getPrefix() : "")
-                    .replace("{suffix}", metaData.getSuffix() != null ? metaData.getSuffix() : "")
-                    .replace("{prefixes}", String.join(" ", metaData.getPrefixes().values()))
-                    .replace("{suffixes}", String.join(" ", metaData.getSuffixes().values()))
-                    .replace("{world}", source.getWorld().getName())
-                    .replace("{name}", source.getName())
-                    .replace("{displayname}", PlainTextComponentSerializer.plainText().serialize(source.displayName()))
-                    .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
-                    .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
-
-            if (!hasPermission) {
-                for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                    plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
+        if (format == null) {
+            ConfigurationSection trackFormatsSection = plugin.getConfig().getConfigurationSection("track-formats");
+            if (trackFormatsSection != null) {
+                for (String trackName : trackFormatsSection.getKeys(false)) {
+                    Track track = this.luckPerms.getTrackManager().getTrack(trackName);
+                    if (track == null) continue;
+                    if (track.containsGroup(group)) {
+                        formatKey = "track-formats." + trackName;
+                        format = plugin.getConfig().getString(formatKey);
+                        break;
+                    }
                 }
-            }
-
-
-            format = format.replace("{message}", plainMessage);
-
-            if (hasPapi) {
-                format = PlaceholderAPI.setPlaceholders(source, format);
             }
         }
 
+        if (format == null) {
+            format = plugin.getConfig().getString("chat-format");
+        }
 
-        return miniMessage.deserialize(Objects.requireNonNull(format));
+        format = format.replace("{prefix}", metaData.getPrefix() != null ? metaData.getPrefix() : "")
+                .replace("{suffix}", metaData.getSuffix() != null ? metaData.getSuffix() : "")
+                .replace("{prefixes}", String.join(" ", metaData.getPrefixes().values()))
+                .replace("{suffixes}", String.join(" ", metaData.getSuffixes().values()))
+                .replace("{world}", source.getWorld().getName())
+                .replace("{name}", source.getName())
+                .replace("{displayname}", PlainTextComponentSerializer.plainText().serialize(source.displayName()))
+                .replace("{username-color}", metaData.getMetaValue("username-color") != null ? Objects.requireNonNull(metaData.getMetaValue("username-color")) : "")
+                .replace("{message-color}", metaData.getMetaValue("message-color") != null ? Objects.requireNonNull(metaData.getMetaValue("message-color")) : "");
+
+        if (!hasPermission) {
+            for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
+                plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
+            }
+        }
+
+        format = format.replace("{message}", plainMessage);
+
+        if (hasPapi) {
+            format = PlaceholderAPI.setPlaceholders(source, format);
+        }
+
+        return miniMessage.deserialize(format);
     }
 }
