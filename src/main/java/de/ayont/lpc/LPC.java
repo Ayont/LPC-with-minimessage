@@ -36,14 +36,13 @@ public final class LPC extends JavaPlugin {
     }
 
     public void registerCommand() {
-        String commandName = "lpc";
         LPCCommand lpcCommand = new LPCCommand(this);
+        this.getCommand("lpc").setExecutor(lpcCommand);
+        this.getCommand("lpc").setTabCompleter(lpcCommand);
 
-        this.getCommand(commandName).setExecutor(lpcCommand);
-        this.getCommand(commandName).setTabCompleter(lpcCommand);
-        PluginCommand proxyChatBridgeBroadcastPluginCommand = getCommand("proxychatbridgebukkitbroadcast");
-        if (proxyChatBridgeBroadcastPluginCommand != null) {
-            proxyChatBridgeBroadcastPluginCommand.setExecutor(new ProxyChatBridgeBukkitBroadcastCommand(this));
+        PluginCommand broadcastCommand = getCommand("broadcast");
+        if (broadcastCommand != null) {
+            broadcastCommand.setExecutor(new ProxyChatBridgeBukkitBroadcastCommand(this));
         }
     }
 

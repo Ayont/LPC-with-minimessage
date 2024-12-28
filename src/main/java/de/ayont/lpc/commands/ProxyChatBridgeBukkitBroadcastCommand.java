@@ -1,12 +1,13 @@
 package de.ayont.lpc.commands;
 
 import de.ayont.lpc.LPC;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Arrays;
 
@@ -32,23 +33,18 @@ public class ProxyChatBridgeBukkitBroadcastCommand implements CommandExecutor {
 
                         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> plugin.getChatManager()
                                 .broadcastMessage(group, message, player));
-                        commandSender.sendMessage(ChatColor.WHITE + "✉" + ChatColor.DARK_GRAY + " » "
-                                + ChatColor.RESET + "Broadcast sent to group (" + group + ").");
+                        commandSender.sendMessage(Component.text("✉ » Broadcast sent to group (" + group + ").", NamedTextColor.WHITE));
                     } else {
-                        commandSender.sendMessage(ChatColor.WHITE + "✉" + ChatColor.DARK_GRAY + " » "
-                                + ChatColor.RESET + "No valid player found to send plugin message.");
+                        commandSender.sendMessage(Component.text("✉ » No valid player found to send plugin message.", NamedTextColor.WHITE));
                     }
                 } else {
-                    commandSender.sendMessage(ChatColor.WHITE + "✉" + ChatColor.DARK_GRAY + " » "
-                            + ChatColor.RESET + "/pcbbb <group> <message>");
+                    commandSender.sendMessage(Component.text("✉ » /pcbbb <group> <message>", NamedTextColor.WHITE));
                 }
             } else {
-                commandSender.sendMessage(ChatColor.WHITE + "✉" + ChatColor.DARK_GRAY + " » "
-                        + ChatColor.RESET + "This command only works if a player is online.");
+                commandSender.sendMessage(Component.text("✉ » This command only works if a player is online.", NamedTextColor.WHITE));
             }
         } else {
-            commandSender.sendMessage(ChatColor.WHITE + "✉" + ChatColor.DARK_GRAY + " » "
-                    + ChatColor.RESET + "No permission.");
+            commandSender.sendMessage(Component.text("<red>✉ » No permission.", NamedTextColor.WHITE));
         }
 
         return true;

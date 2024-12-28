@@ -12,3 +12,6 @@ commands:
     description: Reload the configuration.
     permission: lpc.reload
     usage: "Usage: /lpc reload"
+  broadcast:
+    description: Broadcast a message to all players. (Servers)
+    usage: "Usage: /broadcast <message>"
