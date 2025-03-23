@@ -27,22 +27,22 @@ public class LPCChatRenderer implements ChatRenderer {
 
     private final Map<String, String> legacyToMiniMessageColors = new HashMap<>() {
         {
-            put("&0", "<black>");
-            put("&1", "<dark_blue>");
-            put("&2", "<dark_green>");
-            put("&3", "<dark_aqua>");
-            put("&4", "<dark_red>");
-            put("&5", "<dark_purple>");
-            put("&6", "<gold>");
-            put("&7", "<gray>");
-            put("&8", "<dark_gray>");
-            put("&9", "<blue>");
-            put("&a", "<green>");
-            put("&b", "<aqua>");
-            put("&c", "<red>");
-            put("&d", "<light_purple>");
-            put("&e", "<yellow>");
-            put("&f", "<white>");
+            put("0", "<black>");
+            put("1", "<dark_blue>");
+            put("2", "<dark_green>");
+            put("3", "<dark_aqua>");
+            put("4", "<dark_red>");
+            put("5", "<dark_purple>");
+            put("6", "<gold>");
+            put("7", "<gray>");
+            put("8", "<dark_gray>");
+            put("9", "<blue>");
+            put("a", "<green>");
+            put("b", "<aqua>");
+            put("c", "<red>");
+            put("d", "<light_purple>");
+            put("e", "<yellow>");
+            put("f", "<white>");
         }
     };
 
@@ -65,7 +65,10 @@ public class LPCChatRenderer implements ChatRenderer {
 
         if (hasPermission) {
             for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                plainMessage = plainMessage.replace(entry.getKey(), entry.getValue());
+                String withampersand = "&" + entry.getValue();
+                plainMessage = plainMessage.replace(withampersand, entry.getKey());
+                String withsectionsign = "§" + entry.getValue();
+                plainMessage = plainMessage.replace(withsectionsign, entry.getKey());
             }
         }
 
@@ -103,7 +106,10 @@ public class LPCChatRenderer implements ChatRenderer {
 
         if (!hasPermission) {
             for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                plainMessage = plainMessage.replace(entry.getValue(), entry.getKey());
+                String withampersand = "&" + entry.getValue();
+                plainMessage = plainMessage.replace(withampersand, entry.getKey());
+                String withsectionsign = "§" + entry.getValue();
+                plainMessage = plainMessage.replace(withsectionsign, entry.getKey());
             }
         }
 
