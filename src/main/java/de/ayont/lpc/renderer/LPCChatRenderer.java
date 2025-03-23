@@ -65,7 +65,10 @@ public class LPCChatRenderer implements ChatRenderer {
 
         if (hasPermission) {
             for (Map.Entry<String, String> entry : legacyToMiniMessageColors.entrySet()) {
-                plainMessage = plainMessage.replace(entry.getKey(), entry.getValue());
+                String withampersand = "&" + entry.getValue();
+                plainMessage = plainMessage.replace(withampersand, entry.getKey());
+                String withsectionsign = "§" + entry.getValue();
+                plainMessage = plainMessage.replace(withsectionsign, entry.getKey());
             }
         }
 
