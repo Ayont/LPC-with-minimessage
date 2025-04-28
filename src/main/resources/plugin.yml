@@ -1,7 +1,7 @@
 name: LPC
 version: '${version}'
 main: de.ayont.lpc.LPC
-api-version: '1.20'
+api-version: '1.21'
 authors: [wikmor]
 depend: [LuckPerms]
 softdepend: [PlaceholderAPI]
