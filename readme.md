@@ -1,101 +1,125 @@
-![Varilx](https://discordapp.com/api/guilds/886262410489520168/widget.png?style=shield) ![LatestCommit](https://img.shields.io/github/last-commit/Ayont/LPC-with-minimessage) ![Alldownloads](https://img.shields.io/github/downloads/ayont/LPC-with-minimessage/total
-)
+![LPC Banner](https://cdn.varilx.de/raw/fwtRZS.png)
 
+<p align="center">
+  <a href="[https://modrinth.com/plugin/vsit](https://modrinth.com/plugin/lpc-chat)">
+    <img src="https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-modrinth.svg" alt="Available on Modrinth" />
+  </a>
+</p>
 
-![LPC Chat Formatter Minimessage](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/cbfc847a-a201-4092-9e52-a26c0ba6d2c3)
+<p align="center">
+  <a href="https://discord.gg/ZPyb9g6Gs4">
+    <img src="https://img.shields.io/discord/1322873747535040512" alt="Discord">
+  </a>
+  <a href="https://github.com/Ayont/LPC-with-minimessage/actions/workflows/build.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/Ayont/LPC-with-minimessage/build.yml?branch=main" alt="Build Status">
+  </a>
+  <a href="https://github.com/Ayont/LPC-with-minimessage/releases">
+    <img src="https://img.shields.io/github/v/release/Ayont/LPC-with-minimessage" alt="Latest Release">
+  </a>
+</p>
 
+# LPC – LuckPerms Chat Formatter ✨  
+**A flexible chat formatting plugin with MiniMessage support for LuckPerms**
 
-# LPC with Mini-message Support!
+> Modern chat formatting powered by [MiniMessage](https://docs.advntr.dev/minimessage/format.html), full LuckPerms metadata support, group/track formats, and PlaceholderAPI!
 
-A chat formatting plugin for LuckPerms with Minimessage and other Features!
-### The Legacy Version » https://github.com/wikmor/LPC (@wikmor)
+---
 
+## 🔧 Requirements
 
-## REQUIRED (DEPENDENCIES)
-[Luckperms](https://www.spigotmc.org/resources/luckperms.28140/) - permissions plugin
+- [LuckPerms](https://www.spigotmc.org/resources/luckperms.28140/) *(Required)* – Permissions plugin  
+- [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) *(Optional)* – Additional placeholders  
 
-[PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) - extra placeholders (optional)​
+---
 
-## Config.yml
-````yml
+## ✅ Features
+
+- Full [MiniMessage](https://docs.advntr.dev/minimessage/format.html) formatting support
+- Group and track-specific chat formats
+- Optional support for PlaceholderAPI
+- Supports `[ITEM]` placeholder in chat
+- Customizable reload message
+- No legacy color codes – modern MiniMessage only
+
+---
+
+## 🧑‍💼 Permissions
+
+| Command / Feature        | Permission Node       | Description |
+|--------------------------|------------------------|--------------|
+| `/lpc reload`            | `lpc.reload`           | Reloads the configuration |
+| MiniMessage colors       | `lpc.colorcodes`       | Allows using MiniMessage color codes |
+| `[ITEM]` Placeholder     | `lpc.itemplaceholder`  | Enables the `[ITEM]` placeholder in chat |
+
+---
+
+## ⚙️ Configuration (`config.yml`)
+
+```yaml
 # LPC Configuration
-# Please read the https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta before you set up.
-#
-# Placeholders:
-# {message} - the chat message
-# {name} - the player's name
-# {displayname} - the player's display name / nickname
-# {world} - the world name of the player's current world
-# {prefix} - the player's highest priority prefix
-# {suffix} - the player's highest priority suffix
-# {prefixes} - the player's prefixes sorted by the highest priority
-# {suffixes} - the player's suffixes sorted by the highest priority
-# {username-color} - the player's or the group's username color
-# {message-color} - the player's or the group's message color
 
-# WARNING: Prefixes, Suffixes, message-color etc. needs to be Minimessage Colorcodes and not Legacy!
-
-# To reload the configuration, run '/lpc reload' command. Make sure you have the 'lpc.reload' permission assigned.
-# More information can be found at the Github Wiki.
+# Main chat format (MiniMessage!)
 chat-format: "{prefix}{name}<dark_gray> »<reset> {message}"
 
-# Set the format per group.
-# Note: Option for more advanced users. Remove comments to run.
+# Format per group (optional)
 group-formats:
-#  default: "[default] {name}<dark_gray> »<reset> {message}"
-#  admin: "[admin] {name}<dark_gray> »<reset> {message}"
+#  default: "<gray>[User]</gray> {name}<dark_gray> »<reset> {message}"
+#  admin: "<red>[Admin]</red> {name}<dark_gray> »<reset> {message}"
 
-# Set the format per track
-# Note: Group formatting takes priority over track formatting, ensure user isn't in a group with corresponding format to apply track format
+# Format per track (optional)
 track-formats:
-#  staff_track: "[staff] {name}<dark_gray> »<reset> {message}"
-#  donator_track: "{donator_rank} {name}<dark_gray> »<reset> {message}"
+#  staff_track: "<gold>[Staff]</gold> {name}<dark_gray> »<reset> {message}"
+#  donator_track: "<aqua>[Donator]</aqua> {name}<dark_gray> »<reset> {message}"
 
-# Should the [item] placeholder be enabled
+# Enable the [ITEM] placeholder
 use-item-placeholder: true
 
-# Editing Reload-message
-reload-message: "<green>Reloaded LPC Configuration!"
-````
+# Reload message
+reload-message: "<green>LPC configuration reloaded successfully!"
+```
 
-## Wiki to the Placeholders ->
-> {message}: The chat message
+---
 
-> {name}: The player's name
+## 🪄 Available Placeholders
 
-> {displayname}: The player's display name / nickname
-> {world}: The world name of the player's current world
+| Placeholder             | Description |
+|-------------------------|-------------|
+| `{message}`             | The chat message |
+| `{name}`                | Player's name |
+| `{displayname}`         | Display name / nickname |
+| `{world}`               | Player's current world |
+| `{prefix}`              | Highest priority prefix |
+| `{suffix}`              | Highest priority suffix |
+| `{prefixes}`            | Sorted list of all prefixes |
+| `{suffixes}`            | Sorted list of all suffixes |
+| `{username-color}`      | Username color from meta |
+| `{message-color}`       | Message color from meta |
 
-> {prefix}: The player's highest priority prefix
+> ℹ️ **Important:** All color values (prefix, suffix, etc.) must be in **MiniMessage format** – no legacy codes (`&a`, `§b`, etc.)
 
-> {suffix}: The player's highest priority suffix
+---
 
-> {prefixes}: The player's prefixes sorted by the highest priority
+## 📸 Previews
 
-> {suffixes}: The player's suffixes sorted by the highest priority
+**Chat Format Example**  
+![Chatformat](https://cdn.modrinth.com/data/cached_images/690d3848aefb13b4088df4e388218347383eef86.png)
 
-> {username-color}: The player's or the group's username color
+**[ITEM] Placeholder Example**  
+![Item Placeholder](https://cdn.modrinth.com/data/cached_images/5e95c782f9e06878f56633e45ac4b465e540ac97.png)
 
-> {message-color}: The player's or the group's message color
+---
 
-# Preview:
+## 🚀 Installation
 
-### Chat Format
-![grafik](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/f8394ef3-286a-41f9-a86a-a88874ad1f76)
+1. Stop your server  
+2. Place the `LPC.jar` into your `/plugins` folder  
+3. Start the server to generate configuration files  
+4. Edit the `config.yml` to your liking  
+5. Use `/lpc reload` to apply your changes ✅
 
-### [ITEM] Placeholder
-![grafik](https://github.com/Ayont/LPC-with-minimessage/assets/107298409/ab779f59-f2d1-4b41-8996-5d6df52f4ee0)
+---
 
+## 📌 Notes
 
-## INSTALLATION
-1. Stop your server.
-2. Download and drag the plugin .jar file into your plugins folder.
-3. Start your server to generate config files.
-4. Edit config.yml to your liking.
-5. Type: /lpc reload, to reload the plugin. ✅
-
-
-
-
-# NEED TO KNOW!
-- This plugin is not affiliated with LuckPerms. Please do not ask its author for help with this plugin.​
+- **Not affiliated with LuckPerms** – Please do not contact the LuckPerms author for support!
+- Legacy version available at: [GitHub Legacy LPC](https://github.com/wikmor/LPC)
