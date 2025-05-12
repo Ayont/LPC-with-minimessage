@@ -1,7 +1,7 @@
 ![LPC Banner](https://cdn.varilx.de/raw/fwtRZS.png)
 
 <p align="center">
-  <a href="[https://modrinth.com/plugin/vsit](https://modrinth.com/plugin/lpc-chat)">
+  <a href="https://modrinth.com/plugin/lpc-chat">
     <img src="https://raw.githubusercontent.com/vLuckyyy/badges/main/avaiable-on-modrinth.svg" alt="Available on Modrinth" />
   </a>
 </p>
