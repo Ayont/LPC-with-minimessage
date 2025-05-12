@@ -2,11 +2,11 @@ name: LPC
 version: '${version}'
 main: de.ayont.lpc.LPC
 api-version: '1.21'
-authors: [wikmor]
+authors: [Ayont, Varilx-Development]
 depend: [LuckPerms]
 softdepend: [PlaceholderAPI]
-description: Edit version of wikmors LPC plugin (Minimessage Support 1.20.6)
-website: https://www.spigotmc.org/resources/lpc-chat-formatter-1-7-10-1-20.68965/
+description: Edit version of wikmors Legacy LPC plugin (Minimessage Support 1.21.5)
+website: https://modrinth.com/plugin/lpc-chat
 commands:
   lpc:
     description: Reload the configuration.
