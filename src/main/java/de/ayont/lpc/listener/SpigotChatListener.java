@@ -20,13 +20,11 @@ import java.util.Map;
 public class SpigotChatListener implements Listener {
     private final LPC plugin;
     private final SpigotChatRenderer chatRenderer;
-    private final MiniMessage miniMessage;
     private final Map<String, String> legacyToMiniMessageColors;
 
     public SpigotChatListener(LPC plugin) {
         this.plugin = plugin;
         this.chatRenderer = new SpigotChatRenderer(plugin);
-        this.miniMessage = MiniMessage.miniMessage();
         this.legacyToMiniMessageColors = new HashMap<>();
         initColorMappings();
     }
