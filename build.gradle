@@ -1,20 +1,16 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.gradleup.shadow' version '8.3.11'
 }
 
 group = 'de.ayont'
-version = '3.6.9'
+version = project.findProperty('project_version') ?: '4.0.0'
 
 repositories {
     mavenCentral()
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
-    }
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven {
         name = "placeholderapi"
@@ -26,19 +22,34 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:$paper"
     compileOnly "net.luckperms:api:$luckpermsapi"
     compileOnly "me.clip:placeholderapi:$papi"
-    implementation "net.kyori:adventure-platform-bukkit:$platformbukkit"
-    implementation "net.kyori:adventure-text-minimessage:$adventure"
+    compileOnly "com.google.code.gson:gson:2.13.2" // provided by the server at runtime
+
+    // Adventure — pinned to the version Paper 26.1.2 bundles, via the BOM.
+    // Shaded UNRELOCATED on purpose: on Paper these classes resolve from the server's bundled copy
+    // (traditional plugin = parent-first class loading), and on Spigot — which ships no Adventure —
+    // they load from this jar. Only the modules actually used are shaded.
+    // IMPORTANT: keep the `adventure` version in gradle.properties matching Paper's bundled Adventure
+    // version to avoid classpath skew.
+    implementation platform("net.kyori:adventure-bom:$adventure")
+    implementation "net.kyori:adventure-api"
+    implementation "net.kyori:adventure-text-minimessage"
+    implementation "net.kyori:adventure-text-serializer-legacy"
+    implementation "net.kyori:adventure-text-serializer-plain"
+
+    testImplementation "io.papermc.paper:paper-api:$paper"
+    testImplementation platform("net.kyori:adventure-bom:$adventure")
+    testImplementation "net.kyori:adventure-text-minimessage"
+    testImplementation "net.kyori:adventure-api"
+    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-shadowJar {
-    archiveFileName.set('LPC-Minimessage.jar')
-    mergeServiceFiles {
-        exclude 'META-INF/*.DSA'
-        exclude 'META-INF/*.RSA'
-    }
+test {
+    useJUnitPlatform()
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -50,7 +61,6 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release.set(targetJavaVersion)
     }
@@ -63,4 +73,21 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+shadowJar {
+    archiveFileName.set("LPC-${project.version}.jar")
+    mergeServiceFiles {
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
+}
+
+// The plain (dependency-less) jar would not run on a server, so only ship the shaded jar.
+jar {
+    enabled = false
+}
+
+tasks.named('assemble') {
+    dependsOn tasks.named('shadowJar')
 }
