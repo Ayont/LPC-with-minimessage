@@ -22,7 +22,7 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:$paper"
     compileOnly "net.luckperms:api:$luckpermsapi"
     compileOnly "me.clip:placeholderapi:$papi"
-    compileOnly "com.google.code.gson:gson:2.13.2" // provided by the server at runtime
+    compileOnly "com.google.code.gson:gson:2.14.0" // provided by the server at runtime
 
     // Adventure — pinned to the version Paper 26.1.2 bundles, via the BOM.
     // Shaded UNRELOCATED on purpose: on Paper these classes resolve from the server's bundled copy
