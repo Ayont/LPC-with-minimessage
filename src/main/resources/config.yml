@@ -1,38 +1,202 @@
-# LPC Configuration
-# Please read the https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta before you set up.
+# ┌─────────────────────────────────────────────────────────────────────┐
+# │  LPC – LuckPerms Chat Formatter                                       │
+# │  MiniMessage powered. See https://docs.advntr.dev/minimessage/        │
+# └─────────────────────────────────────────────────────────────────────┘
 #
-# Placeholders:
-# {message} - the chat message
-# {name} - the player's name
-# {displayname} - the player's display name / nickname
-# {world} - the world name of the player's current world
-# {prefix} - the player's highest priority prefix
-# {suffix} - the player's highest priority suffix
-# {prefixes} - the player's prefixes sorted by the highest priority
-# {suffixes} - the player's suffixes sorted by the highest priority
-# {username-color} - the player's or the group's username color
-# {message-color} - the player's or the group's message color
+# Set up LuckPerms meta first:
+# https://luckperms.net/wiki/Prefixes,-Suffixes-&-Meta
+#
+# Placeholders usable in formats:
+#   {message}         - the chat message (inserted safely, never re-parsed)
+#   {name}            - the player's name
+#   {displayname}     - the player's display name / nickname
+#   {gradient-name}   - the player's name wrapped in their rank gradient (see gradient-names)
+#   {world}           - the player's current world
+#   {prefix}          - the highest priority prefix
+#   {suffix}          - the highest priority suffix
+#   {prefixes}        - all prefixes, highest priority first
+#   {suffixes}        - all suffixes, highest priority first
+#   {username-color}  - the 'username-color' LuckPerms meta value
+#   {message-color}   - the 'message-color' LuckPerms meta value
+#
+# NOTE: Prefixes, suffixes and colors must use MiniMessage, not legacy (&a / §b) codes.
+# PlaceholderAPI placeholders (%...%) are supported inside formats when PlaceholderAPI is installed.
 
-# WARNING: Prefixes, Suffixes, message-color etc. needs to be Minimessage Colorcodes and not Legacy!
-
-# To reload the configuration, run '/lpc reload' command. Make sure you have the 'lpc.reload' permission assigned.
-# More information can be found at the Github Wiki.
+# Main chat format.
 chat-format: "{prefix}{name}<dark_gray> »<reset> {message}"
 
-# Set the format per group.
-# Note: Option for more advanced users. Remove comments to run.
+# Per-group formats (optional). Remove the leading '#' to enable.
 group-formats:
-#  default: "[default] {name}<dark_gray> »<reset> {message}"
-#  admin: "[admin] {name}<dark_gray> »<reset> {message}"
+#  default: "<gray>[User]</gray> {name}<dark_gray> »<reset> {message}"
+#  admin: "<red>[Admin]</red> {name}<dark_gray> »<reset> {message}"
 
-# Set the format per track
-# Note: Group formatting takes priority over track formatting, ensure user isn't in a group with corresponding format to apply track format
+# Per-track formats (optional). Group formats take priority over track formats.
 track-formats:
-#  staff_track: "[staff] {name}<dark_gray> »<reset> {message}"
-#  donator_track: "{donator_rank} {name}<dark_gray> »<reset> {message}"
+#  staff_track: "<gold>[Staff]</gold> {name}<dark_gray> »<reset> {message}"
+#  donator_track: "<aqua>[Donator]</aqua> {name}<dark_gray> »<reset> {message}"
 
-# Should the [item] placeholder be enabled
+# Enable the [item] placeholder (shows the held item, with a hover tooltip on Paper).
+# Requires the 'lpc.itemplaceholder' permission.
 use-item-placeholder: true
 
-# Editing Reload-message
-reload-message: "<green>Reloaded LPC Configuration!"
+# Allow players with 'lpc.chatcolor' to use <gradient> and <rainbow> tags in their messages.
+# Cosmetic colour/decoration tags are always allowed for that permission. Interactive tags
+# (click, hover, insertion, ...) are NEVER honoured in player messages, for security.
+allow-gradient-tags: true
+
+# Worlds in which LPC will NOT format chat (left to vanilla / other plugins).
+disabled-worlds: []
+
+# Check Modrinth for new versions on startup and notify players with 'lpc.update' on join.
+update-checker: true
+
+# Message shown after running '/lpc reload'.
+reload-message: "<green>Reloaded LPC configuration!"
+
+# ─────────────────────────────────────────────────────────────────────────
+#  @Mention pings — highlight online player names; ping them (sound + action
+#  bar on Paper). Highlight only on Spigot.
+# ─────────────────────────────────────────────────────────────────────────
+mentions:
+  enabled: true
+  # Require an @ before the name to count as a mention.
+  require-at-symbol: false
+  # How the matched name is rendered. <name> is replaced with the player's name.
+  highlight-format: "<gold>@<name></gold>"
+  # Maximum number of names highlighted per message.
+  max-mentions-per-message: 5
+  # Action bar shown to a mentioned player (Paper). <sender> = who mentioned them.
+  actionbar-text: "<gold>You were mentioned by <white><sender></white>"
+  # Namespaced sound played to mentioned players.
+  ping-sound: "entity.experience_orb.pickup"
+  ping-volume: 1.0
+  ping-pitch: 1.0
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Emoji / shortcut replacement — replace text shortcuts with glyphs.
+# ─────────────────────────────────────────────────────────────────────────
+emoji:
+  enabled: true
+  # When true, only players with 'lpc.emoji' get emoji replacement.
+  require-permission: false
+  replacements:
+    ":heart:": "❤"
+    ":star:": "★"
+    ":check:": "✔"
+    ":cross:": "✖"
+    ":arrow:": "➜"
+    ":note:": "♪"
+
+# ─────────────────────────────────────────────────────────────────────────
+#  URL linkification — make links clickable (Paper) / coloured (Spigot).
+#  Requires the 'lpc.chatlinks' permission. openUrl only, never run_command.
+# ─────────────────────────────────────────────────────────────────────────
+link-urls:
+  enabled: true
+  style: "<blue><underlined>"
+  hover-text: "<gray>Open link"
+  allowed-schemes:
+    - http
+    - https
+  max-length: 200
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Per-rank message styling — colour/decorate the player's OWN words by rank
+#  WITHOUT giving them MiniMessage power. {message} is the player's message.
+# ─────────────────────────────────────────────────────────────────────────
+message-styles:
+  enabled: false
+group-message-styles:
+#  admin: "<red>{message}</red>"
+#  donator: "<light_purple>{message}</light_purple>"
+track-message-styles:
+#  staff_track: "<aqua>{message}</aqua>"
+# Applied when no group/track style matches (leave empty for none).
+default-message-style: ""
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Gradient names — wrap {gradient-name} in a per-rank gradient. The gradient
+#  spec comes from a LuckPerms meta value (e.g. '#B754F4:#FC00FF') or the
+#  per-group fallback below.
+# ─────────────────────────────────────────────────────────────────────────
+gradient-names:
+  enabled: false
+  default-meta-key: "username-gradient"
+group-name-gradients:
+#  admin: "#FF5555:#FFAA00"
+#  donator: "#B754F4:#FC00FF"
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Join / Quit / First-join / Death messages (MiniMessage). Leave a format
+#  empty to suppress that message entirely.
+# ─────────────────────────────────────────────────────────────────────────
+join-messages:
+  enabled: false
+  format: "<dark_gray>[<green>+</green>] {prefix}{name}"
+  first-join:
+    enabled: false
+    format: "<gradient:#B754F4:#FC00FF>Welcome {name} to the server!</gradient>"
+quit-messages:
+  enabled: false
+  format: "<dark_gray>[<red>-</red>] {prefix}{name}"
+death-messages:
+  enabled: false
+  # <death-message> is the vanilla death cause.
+  format: "<gray>☠ <death-message>"
+  show-vanilla-cause: true
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Moderation — runs before formatting. Master switch; each filter also has
+#  its own toggle. Bypass with lpc.bypass.<spam|repeat|caps|profanity|advert>.
+# ─────────────────────────────────────────────────────────────────────────
+moderation:
+  enabled: false
+
+anti-spam:
+  enabled: true
+  cooldown-millis: 1500
+  message: "<red>Please wait <yellow><seconds>s</yellow> before chatting again."
+
+repeat-filter:
+  enabled: true
+  expiry-millis: 30000
+  message: "<red>Please don't repeat the same message."
+
+caps-filter:
+  enabled: true
+  min-length: 8
+  max-uppercase-ratio: 0.7
+  # BLOCK or LOWERCASE
+  action: LOWERCASE
+  message: "<red>Please don't shout."
+
+profanity-filter:
+  enabled: false
+  # BLOCK or MASK
+  action: MASK
+  words: []
+  mask-char: "*"
+  message: "<red>Watch your language."
+
+anti-advert:
+  enabled: false
+  # BLOCK or REDACT
+  action: REDACT
+  detect-ip: true
+  allowlist: []
+  mask: "[link removed]"
+  message: "<red>Advertising is not allowed."
+
+# ─────────────────────────────────────────────────────────────────────────
+#  Mute — block chat for muted players. A player is muted if they hold the
+#  permission node below (set by a punishment plugin) or are temp-muted via
+#  /lpc mute <player> [duration].
+# ─────────────────────────────────────────────────────────────────────────
+mute:
+  enabled: false
+  enable-commands: true
+  permission-node: "lpc.muted"
+  message: "<red>You are currently muted."
+
+# Internal config version. Do not edit.
+config-version: 3
