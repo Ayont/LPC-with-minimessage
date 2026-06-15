@@ -40,7 +40,7 @@ dependencies {
     testImplementation platform("net.kyori:adventure-bom:$adventure")
     testImplementation "net.kyori:adventure-text-minimessage"
     testImplementation "net.kyori:adventure-api"
-    testImplementation platform('org.junit:junit-bom:5.11.4')
+    testImplementation platform('org.junit:junit-bom:5.14.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
