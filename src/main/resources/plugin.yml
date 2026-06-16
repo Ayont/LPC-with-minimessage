@@ -2,6 +2,7 @@ name: LPC
 version: '${version}'
 main: de.ayont.lpc.LPC
 api-version: '26.1.2'
+folia-supported: true
 authors: [Ayont, Varilx-Development]
 depend: [LuckPerms]
 softdepend: [PlaceholderAPI]

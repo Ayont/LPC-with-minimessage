@@ -45,7 +45,7 @@ public final class UpdateChecker implements Listener {
 
     /** Runs the version check off the main thread. */
     public void checkAsync() {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, this::check);
+        plugin.getScheduler().runAsync(this::check);
     }
 
     private void check() {

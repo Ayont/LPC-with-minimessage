@@ -10,6 +10,8 @@ import de.ayont.lpc.listener.ConnectionListener;
 import de.ayont.lpc.listener.SpigotChatListener;
 import de.ayont.lpc.moderation.ModerationService;
 import de.ayont.lpc.moderation.MuteService;
+import de.ayont.lpc.scheduler.Scheduler;
+import de.ayont.lpc.scheduler.Schedulers;
 import de.ayont.lpc.update.UpdateChecker;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -28,6 +30,8 @@ public final class LPC extends JavaPlugin {
             .build();
 
     private boolean paper;
+    private boolean folia;
+    private Scheduler scheduler;
     private ChatFormatService chatFormatService;
     private MuteService muteService;
     private ModerationService moderationService;
@@ -43,6 +47,8 @@ public final class LPC extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         this.paper = detectPaper();
+        this.folia = detectFolia();
+        this.scheduler = Schedulers.create(this);
         this.chatFormatService = new ChatFormatService(this);
         this.muteService = new MuteService(this);
         this.moderationService = new ModerationService(this, muteService);
@@ -56,6 +62,21 @@ public final class LPC extends JavaPlugin {
 
     public boolean isPaper() {
         return paper;
+    }
+
+    public boolean isFolia() {
+        return folia;
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    @Override
+    public void onDisable() {
+        if (scheduler != null) {
+            scheduler.cancelAll();
+        }
     }
 
     public ChatFormatService getChatFormatService() {
@@ -154,6 +175,16 @@ public final class LPC extends JavaPlugin {
             return true;
         } catch (ClassNotFoundException notPaper) {
             getLogger().info("Spigot API detected — using legacy chat rendering.");
+            return false;
+        }
+    }
+
+    private boolean detectFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            getLogger().info("Folia detected — using regionized scheduling.");
+            return true;
+        } catch (ClassNotFoundException notFolia) {
             return false;
         }
     }
