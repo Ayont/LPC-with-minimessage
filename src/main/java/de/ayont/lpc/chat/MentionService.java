@@ -113,19 +113,17 @@ public final class MentionService {
         return matched;
     }
 
-    /** Schedules a main-thread ping for every mentioned online player. Safe to call async. */
+    /** Schedules a ping for every mentioned online player. Safe to call async. */
     public void pingAll(Set<String> mentioned, String senderName) {
         if (!enabled || mentioned.isEmpty()) {
             return;
         }
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            for (String name : mentioned) {
-                Player target = plugin.getServer().getPlayerExact(name);
-                if (target != null) {
-                    ping(target, senderName);
-                }
+        for (String name : mentioned) {
+            Player target = plugin.getServer().getPlayerExact(name);
+            if (target != null) {
+                plugin.getScheduler().runOnEntity(target, () -> ping(target, senderName));
             }
-        });
+        }
     }
 
     /** Pings a mentioned player with sound + action bar. Call on the main thread. */

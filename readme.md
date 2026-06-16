@@ -30,7 +30,7 @@
 | | |
 |---|---|
 | **Minecraft** | 26.1.2 |
-| **Server** | Paper (recommended) or Spigot |
+| **Server** | Paper (recommended), Folia or Spigot |
 | **Java** | 25+ |
 
 ---
@@ -66,7 +66,7 @@
 - `/lpc reload · version · help · mute · unmute` with tab completion
 - Built-in Modrinth update checker
 - **Safe by design** – player messages can never inject `click`/`hover`/command components
-- Works on both Paper (Adventure rendering) and Spigot (legacy fallback)
+- Works on Paper, Folia (region-aware scheduling) and Spigot (legacy fallback)
 
 ---
 
