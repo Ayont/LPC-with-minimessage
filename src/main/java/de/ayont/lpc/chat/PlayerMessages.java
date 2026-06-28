@@ -22,19 +22,24 @@ public final class PlayerMessages {
      * Creates a MiniMessage instance that only understands cosmetic tags: colors, decorations,
      * gradients, rainbow and reset. Everything else is treated as literal text.
      *
-     * @param allowGradients whether {@code <gradient>} and {@code <rainbow>} are permitted
+     * @param allowGradients whether {@code <gradient>}, {@code <transition>}, {@code <rainbow>},
+     *        and {@code <pride>} are permitted
      * @return a restricted MiniMessage instance suitable for player-supplied input
      */
     public static MiniMessage colorParser(boolean allowGradients) {
         TagResolver resolver = allowGradients
                 ? TagResolver.resolver(
                         StandardTags.color(),
+                        StandardTags.shadowColor(),
                         StandardTags.decorations(),
                         StandardTags.gradient(),
+                        StandardTags.transition(),
                         StandardTags.rainbow(),
+                        StandardTags.pride(),
                         StandardTags.reset())
                 : TagResolver.resolver(
                         StandardTags.color(),
+                        StandardTags.shadowColor(),
                         StandardTags.decorations(),
                         StandardTags.reset());
         return MiniMessage.builder().tags(resolver).build();
