@@ -56,8 +56,11 @@ public class LPCCommand implements CommandExecutor, TabCompleter {
 
     @SuppressWarnings("deprecation") // getDescription() is cross-platform
     private void handleVersion(CommandSender sender) {
+        String platform = plugin.isFolia() ? "Folia" : plugin.isPaper() ? "Paper" : "Spigot";
         plugin.send(sender, mini("<gradient:#B754F4:#FC00FF>LPC</gradient> <gray>v<white>"
                 + plugin.getDescription().getVersion() + "</white> <dark_gray>— <gray>MiniMessage chat formatter."));
+        plugin.send(sender, mini("<dark_gray>Platform: <white>" + platform
+                + "</white> <dark_gray>| <gray>Target: Minecraft <white>26.2</white> · Java <white>25</white> · Adventure <white>5</white>"));
     }
 
     private void handleMute(CommandSender sender, String[] args) {
