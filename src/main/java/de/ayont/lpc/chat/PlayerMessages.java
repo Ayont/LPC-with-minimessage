@@ -59,6 +59,8 @@ public final class PlayerMessages {
         if (!allowColor) {
             return Component.text(text);
         }
-        return colorParser.deserialize(LegacyColors.toMiniMessage(text));
+        // Defence in depth: the restricted parser already rejects interactive tags, but stripInteractive
+        // guarantees no click/hover/insertion can ever survive into a player's message component.
+        return ComponentSanitizer.stripInteractive(colorParser.deserialize(LegacyColors.toMiniMessage(text)));
     }
 }

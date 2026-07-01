@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+      # Gradle runs on Java 21; the Java 25 toolchain compiles the plugin (foojay auto-provisions it).
+      - name: Set up Java 21 (Gradle runtime + 25 toolchain via foojay)
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: 'gradle'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build & test
+        run: ./gradlew clean build --no-daemon --stacktrace

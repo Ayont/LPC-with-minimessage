@@ -35,7 +35,9 @@ class UrlLinkifierTest {
         ClickEvent click = firstClick(out);
         assertTrue(click != null && click.action() == ClickEvent.Action.OPEN_URL,
                 "expected an OPEN_URL click event");
-        assertTrue(click.value().contains("example.com"));
+        // Adventure 5: the URL string lives on Payload.Text, not on ClickEvent directly.
+        String href = ((ClickEvent.Payload.Text) click.payload()).value();
+        assertTrue(href.contains("example.com"), "expected the openUrl target to contain example.com");
     }
 
     @Test

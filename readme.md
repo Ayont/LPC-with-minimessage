@@ -29,9 +29,14 @@
 
 | | |
 |---|---|
-| **Minecraft** | 26.1.2 |
-| **Server** | Paper (recommended), Folia or Spigot |
+| **Minecraft** | 26.2 |
+| **Server** | Paper 26.2+ (recommended), Folia or Spigot |
 | **Java** | 25+ |
+| **Adventure** | 5.x (bundled by Paper — do not override) |
+
+> ⚠️ **"Unsupported API version" / plugin won't load?** LPC declares `api-version: 26.2` and needs
+> **Java 25** + **Paper 26.2** (which ships Adventure 5). Older servers (1.21.x / Java 21) cannot run
+> this build — please update your server to Paper 26.2 and use JDK 25.
 
 ---
 
@@ -65,7 +70,7 @@
 **Quality of life**
 - `/lpc reload · version · help · mute · unmute` with tab completion
 - Built-in Modrinth update checker
-- **Safe by design** – player messages can never inject `click`/`hover`/command components
+- **Safe by design** – player messages can never inject `click`/`hover`/`insertion` events. Defence in depth: a restricted MiniMessage parser **plus** a component sanitizer that strips any interactive event from player & item-name output (closes chat click-command exploits).
 - Works on Paper, Folia (region-aware scheduling) and Spigot (legacy fallback)
 
 ---
@@ -173,5 +178,11 @@ Requires JDK 25.
 
 ## 📌 Notes
 
+- **Developed by [Veylor-Development](https://veylor.net)** — the team behind Veylor.NET, releasing
+  free plugins on Modrinth.
+- **Can players use MiniMessage in chat?** Yes — grant the `lpc.chatcolor` permission. Only
+  **cosmetic** tags (colours, decorations, and optionally `<gradient>`/`<rainbow>`) are honoured;
+  interactive tags (`click`, `hover`, `insertion`, …) are always stripped, so players can never
+  inject commands or fake tooltips.
 - **Not affiliated with LuckPerms** – please do not contact the LuckPerms author for support.
 - Legacy version available at: [GitHub Legacy LPC](https://github.com/wikmor/LPC)

@@ -18,7 +18,9 @@ class PlayerMessagesTest {
     private final MiniMessage parser = PlayerMessages.colorParser(true);
 
     private static boolean hasInteractiveEvent(Component component) {
-        if (component.style().clickEvent() != null || component.style().hoverEvent() != null) {
+        if (component.style().clickEvent() != null
+                || component.style().hoverEvent() != null
+                || component.style().insertion() != null) {
             return true;
         }
         for (Component child : component.children()) {
@@ -58,6 +60,13 @@ class PlayerMessagesTest {
     void render_hoverInjection_blocked() {
         Component result = PlayerMessages.render(parser, "<hover:show_text:'pwned'>x</hover>", true);
         assertFalse(hasInteractiveEvent(result), "hover injection must be blocked");
+    }
+
+    @Test
+    @DisplayName("never produces an insertion from a player message")
+    void render_insertionInjection_blocked() {
+        Component result = PlayerMessages.render(parser, "<insertion:evil>x</insertion>", true);
+        assertFalse(hasInteractiveEvent(result), "insertion injection must be blocked");
     }
 
     @Test
