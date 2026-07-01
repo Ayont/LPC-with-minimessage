@@ -62,7 +62,10 @@ public final class ItemPlaceholder {
             if (plugin.isPaper()) {
                 Component name = meta.displayName();
                 if (name != null) {
-                    return name;
+                    // An item renamed via an anvil (or another plugin) is player-influenced input —
+                    // harden it so a crafted item name can never carry a click/hover/insertion event
+                    // into the [item] tooltip.
+                    return ComponentSanitizer.stripInteractive(name);
                 }
             } else {
                 return LPC.getLegacySerializer().deserialize(meta.getDisplayName());

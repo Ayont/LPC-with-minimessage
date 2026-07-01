@@ -70,7 +70,7 @@
 **Quality of life**
 - `/lpc reload · version · help · mute · unmute` with tab completion
 - Built-in Modrinth update checker
-- **Safe by design** – player messages can never inject `click`/`hover`/command components
+- **Safe by design** – player messages can never inject `click`/`hover`/`insertion` events. Defence in depth: a restricted MiniMessage parser **plus** a component sanitizer that strips any interactive event from player & item-name output (closes chat click-command exploits).
 - Works on Paper, Folia (region-aware scheduling) and Spigot (legacy fallback)
 
 ---
