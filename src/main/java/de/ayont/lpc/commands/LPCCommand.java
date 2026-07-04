@@ -59,8 +59,25 @@ public class LPCCommand implements CommandExecutor, TabCompleter {
         String platform = plugin.isFolia() ? "Folia" : plugin.isPaper() ? "Paper" : "Spigot";
         plugin.send(sender, mini("<gradient:#B754F4:#FC00FF>LPC</gradient> <gray>v<white>"
                 + plugin.getDescription().getVersion() + "</white> <dark_gray>— <gray>MiniMessage chat formatter."));
+        java.util.Properties build = readBuildInfo();
         plugin.send(sender, mini("<dark_gray>Platform: <white>" + platform
-                + "</white> <dark_gray>| <gray>Target: Minecraft <white>26.2</white> · Java <white>25</white> · Adventure <white>5</white>"));
+                + "</white> <dark_gray>| <gray>Build: Minecraft <white>" + build.getProperty("minecraft", "?")
+                + "</white> · Java <white>" + build.getProperty("java", "?")
+                + "</white> · Adventure <white>" + build.getProperty("adventure", "?")
+                + "</white> <dark_gray>(" + build.getProperty("target", "?") + ")"));
+    }
+
+    /** Reads the build-time target descriptor baked into the jar (or empty on failure). */
+    private static java.util.Properties readBuildInfo() {
+        java.util.Properties props = new java.util.Properties();
+        try (java.io.InputStream in = LPCCommand.class.getResourceAsStream("/lpc-build.properties")) {
+            if (in != null) {
+                props.load(in);
+            }
+        } catch (Exception ignored) {
+            // missing/unreadable build info is non-fatal
+        }
+        return props;
     }
 
     private void handleMute(CommandSender sender, String[] args) {

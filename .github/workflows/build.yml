@@ -11,12 +11,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # modern = Paper 26.2 / Adventure 5 / Java 25 ; legacy = Paper 1.21.x / Adventure 4 / Java 21
+        target: [modern, legacy]
     steps:
       - uses: actions/checkout@v5
-      # Gradle runs on Java 21; the Java 25 toolchain compiles the plugin (foojay auto-provisions it).
-      - name: Set up Java 21 (Gradle runtime + 25 toolchain via foojay)
+      # Gradle runs on Java 21; the Java 25 toolchain (modern target) is auto-provisioned by foojay.
+      - name: Set up Java 21 (Gradle runtime + toolchain via foojay)
         uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -25,5 +29,5 @@ jobs:
       - uses: gradle/actions/setup-gradle@v6
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Build & test
-        run: ./gradlew clean build --no-daemon --stacktrace
+      - name: Build & test (${{ matrix.target }})
+        run: ./gradlew clean build -Ptarget=${{ matrix.target }} --no-daemon --stacktrace
