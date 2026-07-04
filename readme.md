@@ -55,7 +55,7 @@ against an Adventure 5 runtime — the exact thing a Paper 26.2 server does.
 
 **Formatting**
 - Full [MiniMessage](https://docs.advntr.dev/minimessage/format.html) support, with group- and track-specific formats
-- Optional PlaceholderAPI integration and `[item]` placeholder (hover tooltip on Paper)
+- Optional PlaceholderAPI integration and `[item]` placeholder (hover tooltip on Paper). `[item]` needs the `lpc.itemplaceholder` permission (default: false — grant it to the default group to enable for everyone)
 - Per-rank message styling and per-rank **gradient names** (`{gradient-name}`)
 - Per-world toggle via `disabled-worlds`
 

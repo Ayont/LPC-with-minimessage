@@ -36,7 +36,9 @@ track-formats:
 #  donator_track: "<aqua>[Donator]</aqua> {name}<dark_gray> »<reset> {message}"
 
 # Enable the [item] placeholder (shows the held item, with a hover tooltip on Paper).
-# Requires the 'lpc.itemplaceholder' permission.
+# NOTE: each player ALSO needs the 'lpc.itemplaceholder' permission (default: false).
+# Grant it to everyone with e.g.  /lp group default permission set lpc.itemplaceholder true
+# Players who type [item] without the permission get a hint in chat.
 use-item-placeholder: true
 
 # Allow players with 'lpc.chatcolor' to use <gradient> and <rainbow> tags in their messages.

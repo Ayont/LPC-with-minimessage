@@ -2,6 +2,7 @@ package de.ayont.lpc;
 
 import de.ayont.lpc.chat.ChatFormatService;
 import de.ayont.lpc.chat.EmojiReplacer;
+import de.ayont.lpc.chat.ItemPlaceholder;
 import de.ayont.lpc.chat.MentionService;
 import de.ayont.lpc.chat.UrlLinkifier;
 import de.ayont.lpc.commands.LPCCommand;
@@ -14,6 +15,7 @@ import de.ayont.lpc.scheduler.Scheduler;
 import de.ayont.lpc.scheduler.Schedulers;
 import de.ayont.lpc.update.UpdateChecker;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
@@ -68,6 +70,26 @@ public final class LPC extends JavaPlugin {
                 + ") on Java " + System.getProperty("java.version")
                 + (paper ? " [Paper/Adventure chat]" : " [Spigot/legacy chat]")
                 + (folia ? " [Folia]" : ""));
+    }
+
+    /**
+     * Tells a player why their {@code [item]} did not resolve, when {@code use-item-placeholder} is
+     * enabled but they lack the {@code lpc.itemplaceholder} permission. Called once per chat message
+     * (not per viewer), so it never spams.
+     */
+    public void maybeItemPlaceholderHint(Player player, String message) {
+        if (!getConfig().getBoolean("use-item-placeholder", false)) {
+            return;
+        }
+        if (player.hasPermission("lpc.itemplaceholder")) {
+            return;
+        }
+        if (!ItemPlaceholder.containsToken(message)) {
+            return;
+        }
+        send(player, MiniMessage.miniMessage().deserialize(
+                "<dark_gray>[<gradient:#B754F4:#FC00FF>LPC</gradient>] <yellow>You need the permission "
+                        + "<white>lpc.itemplaceholder</white> to use <white>[item]</white> in chat."));
     }
 
     public boolean isPaper() {

@@ -22,6 +22,11 @@ public final class ItemPlaceholder {
     private ItemPlaceholder() {
     }
 
+    /** @return true if {@code text} contains the {@code [item]} token (case-insensitive). */
+    public static boolean containsToken(String text) {
+        return text != null && ITEM_PATTERN.matcher(text).find();
+    }
+
     /**
      * Applies the {@code [item]} replacement when enabled in config and permitted, otherwise
      * returns the rendered component unchanged.
