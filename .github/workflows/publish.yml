@@ -52,15 +52,13 @@ jobs:
           sed -i "s/^project_version = .*/project_version = ${FULL_VERSION}/" gradle.properties
           echo "FULL_VERSION=$FULL_VERSION" >> "$GITHUB_ENV"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-      - name: Build both jars (modern + legacy)
+      - name: Build jar (incl. tests + cross-compat proof)
         run: |
           ./gradlew clean
-          # modern = Paper 26.2 / Adventure 5 / Java 25 ; legacy = Paper 1.21.x / Adventure 4 / Java 21
-          ./gradlew shadowJar -Ptarget=modern --no-daemon --stacktrace --refresh-dependencies
-          ./gradlew shadowJar -Ptarget=legacy --no-daemon --stacktrace --refresh-dependencies
+          ./gradlew build --no-daemon --stacktrace --refresh-dependencies
           ls -la build/libs/
-      - name: Upload release assets
+      - name: Upload release asset
         uses: softprops/action-gh-release@v2
         with:
-          files: build/libs/*.jar
+          files: build/libs/LPC-*.jar
           fail_on_unmatched_files: true

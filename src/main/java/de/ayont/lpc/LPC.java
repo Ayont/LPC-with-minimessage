@@ -58,6 +58,16 @@ public final class LPC extends JavaPlugin {
         registerCommand();
         registerListeners();
         startUpdateChecker();
+        logRuntimePlatform();
+    }
+
+    /** Logs the detected server + Java version — the single universal jar runs on many, so make
+     *  the actual runtime platform visible for support. */
+    private void logRuntimePlatform() {
+        getLogger().info("Running on " + getServer().getName() + " (API " + getServer().getBukkitVersion()
+                + ") on Java " + System.getProperty("java.version")
+                + (paper ? " [Paper/Adventure chat]" : " [Spigot/legacy chat]")
+                + (folia ? " [Folia]" : ""));
     }
 
     public boolean isPaper() {

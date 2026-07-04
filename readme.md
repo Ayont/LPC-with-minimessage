@@ -27,18 +27,20 @@
 
 ## 🧩 Compatibility
 
-LPC ships **two builds per release** so it runs on both old and new servers. Pick the one matching
-your platform on the Modrinth download page (Modrinth's game-version filter shows the right one
-automatically):
+**One jar runs on everything.** LPC 4.4.0+ ships a **single universal jar** — no more picking the
+right build per server version.
 
-| Build | Minecraft | Server | Java | Adventure |
-|---|---|---|---|---|
-| **`LPC-x.y.z.jar`** *(default)* | 26.2 | Paper 26.2+, Folia or Spigot | 25 | 5.x (bundled) |
-| **`LPC-x.y.z-legacy.jar`** | 1.21.x *(incl. 1.21.11)* | Paper 1.21.x, Folia or Spigot | 21 | 4.x (bundled) |
+| | |
+|---|---|
+| **Minecraft** | 1.21.x – 26.2 *(incl. 1.21.11)* |
+| **Server** | Paper, Folia or Spigot |
+| **Java** | 21+ (runs on 21 **and** 25) |
 
-> ⚠️ **"Unsupported API version" / plugin won't load?** You have the wrong build for your server.
-> On **Paper 1.21.x / Java 21** use the `-legacy` jar; on **Paper 26.2 / Java 25** use the default jar.
-> (Adventure 4 and 5 are not binary compatible, which is why two jars exist.)
+How it works: the jar is compiled once against the lowest platform (Paper 1.21 / Adventure 4 / Java
+21, `api-version: 1.21`). Java 21 bytecode runs on Java 25; Paper 26.2 accepts `api-version: 1.21`
+(forward-compat); and the Adventure APIs LPC uses stay binary-compatible across Adventure 4 → 5.
+The `crossCompatTest` CI task proves this every build by running the Adventure-4-compiled tests
+against an Adventure 5 runtime — the exact thing a Paper 26.2 server does.
 
 ---
 
