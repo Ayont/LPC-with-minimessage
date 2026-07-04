@@ -1,7 +1,7 @@
 name: LPC
 version: '${version}'
 main: de.ayont.lpc.LPC
-api-version: '26.2'
+api-version: '${apiVersion}'
 folia-supported: true
 authors: [Ayont, Veylor-Development]
 depend: [LuckPerms]

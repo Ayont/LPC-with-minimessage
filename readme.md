@@ -27,16 +27,18 @@
 
 ## 🧩 Compatibility
 
-| | |
-|---|---|
-| **Minecraft** | 26.2 |
-| **Server** | Paper 26.2+ (recommended), Folia or Spigot |
-| **Java** | 25+ |
-| **Adventure** | 5.x (bundled by Paper — do not override) |
+LPC ships **two builds per release** so it runs on both old and new servers. Pick the one matching
+your platform on the Modrinth download page (Modrinth's game-version filter shows the right one
+automatically):
 
-> ⚠️ **"Unsupported API version" / plugin won't load?** LPC declares `api-version: 26.2` and needs
-> **Java 25** + **Paper 26.2** (which ships Adventure 5). Older servers (1.21.x / Java 21) cannot run
-> this build — please update your server to Paper 26.2 and use JDK 25.
+| Build | Minecraft | Server | Java | Adventure |
+|---|---|---|---|---|
+| **`LPC-x.y.z.jar`** *(default)* | 26.2 | Paper 26.2+, Folia or Spigot | 25 | 5.x (bundled) |
+| **`LPC-x.y.z-legacy.jar`** | 1.21.x *(incl. 1.21.11)* | Paper 1.21.x, Folia or Spigot | 21 | 4.x (bundled) |
+
+> ⚠️ **"Unsupported API version" / plugin won't load?** You have the wrong build for your server.
+> On **Paper 1.21.x / Java 21** use the `-legacy` jar; on **Paper 26.2 / Java 25** use the default jar.
+> (Adventure 4 and 5 are not binary compatible, which is why two jars exist.)
 
 ---
 

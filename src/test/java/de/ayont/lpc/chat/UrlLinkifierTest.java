@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,9 +36,10 @@ class UrlLinkifierTest {
         ClickEvent click = firstClick(out);
         assertTrue(click != null && click.action() == ClickEvent.Action.OPEN_URL,
                 "expected an OPEN_URL click event");
-        // Adventure 5: the URL string lives on Payload.Text, not on ClickEvent directly.
-        String href = ((ClickEvent.Payload.Text) click.payload()).value();
-        assertTrue(href.contains("example.com"), "expected the openUrl target to contain example.com");
+        // Adventure-version-neutral: round-trip through the serializer to read the click target,
+        // so the assertion compiles against both Adventure 4 (click.value()) and 5 (Payload.Text).
+        assertTrue(MiniMessage.miniMessage().serialize(out).contains("example.com"),
+                "expected the openUrl target to contain example.com");
     }
 
     @Test

@@ -4,7 +4,26 @@ plugins {
 }
 
 group = 'de.ayont'
-version = project.findProperty('project_version') ?: '4.2.0'
+version = project.findProperty('project_version') ?: '4.3.0'
+
+// ─── Multi-version build target ───────────────────────────────────────────────
+// One source set, two builds. Adventure 4 (Paper 1.21) and Adventure 5 (Paper 26.2)
+// are NOT binary compatible, so we ship a dedicated jar per platform. Modrinth's
+// game-version tags route each user to the right one.
+//
+//   ./gradlew build -Ptarget=modern   (default) -> Paper 26.2 / Adventure 5 / Java 25 / api-version 26.2
+//   ./gradlew build -Ptarget=legacy               -> Paper 1.21.x / Adventure 4 / Java 21 / api-version 1.21
+def target = project.findProperty('target') ?: 'modern'
+final def TARGETS = [
+        modern: [paper: '26.2.build.40-alpha', adventure: '5.2.0',  gson: '2.14.0', java: 25, apiVersion: '26.2', mc: '26.2'],
+        legacy: [paper: '1.21.11-R0.1-SNAPSHOT', adventure: '4.23.0', gson: '2.10.1', java: 21, apiVersion: '1.21', mc: '1.21.x']
+]
+final def cfg = TARGETS[target]
+if (cfg == null) {
+    throw new GradleException("Unknown build target '${target}'. Use -Ptarget=modern or -Ptarget=legacy")
+}
+logger.lifecycle("LPC build target: {} (paper={}, adventure={}, java={}, api-version={})",
+        target, cfg.paper, cfg.adventure, cfg.java, cfg.apiVersion)
 
 repositories {
     mavenCentral()
@@ -19,26 +38,22 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:$paper"
+    compileOnly "io.papermc.paper:paper-api:${cfg.paper}"
     compileOnly "net.luckperms:api:$luckpermsapi"
     compileOnly "me.clip:placeholderapi:$papi"
-    compileOnly "com.google.code.gson:gson:2.14.0" // provided by the server at runtime
+    compileOnly "com.google.code.gson:gson:${cfg.gson}" // provided by the server at runtime
 
-    // Adventure — pinned to the version Paper 26.2 bundles (5.2.0), via the BOM.
-    // Shaded UNRELOCATED on purpose: on Paper these classes resolve from the server's bundled copy
-    // (traditional plugin = parent-first class loading), and on Spigot — which ships no Adventure —
-    // they load from this jar. Only the modules actually used are shaded.
-    // IMPORTANT: keep the `adventure` version in gradle.properties matching Paper's bundled Adventure
-    // version (verified against the paper-api POM) to avoid classpath skew. Paper 26.2 moved to
-    // Adventure 5.x, so this plugin now requires Paper 26.2+ (Adventure 5).
-    implementation platform("net.kyori:adventure-bom:$adventure")
+    // Adventure — pinned to the version the target Paper bundles (verified against the paper-api POM),
+    // so shaded (unrelocated) classes resolve from the server's bundled copy on Paper. Only the
+    // modules actually used are shaded.
+    implementation platform("net.kyori:adventure-bom:${cfg.adventure}")
     implementation "net.kyori:adventure-api"
     implementation "net.kyori:adventure-text-minimessage"
     implementation "net.kyori:adventure-text-serializer-legacy"
     implementation "net.kyori:adventure-text-serializer-plain"
 
-    testImplementation "io.papermc.paper:paper-api:$paper"
-    testImplementation platform("net.kyori:adventure-bom:$adventure")
+    testImplementation "io.papermc.paper:paper-api:${cfg.paper}"
+    testImplementation platform("net.kyori:adventure-bom:${cfg.adventure}")
     testImplementation "net.kyori:adventure-text-minimessage"
     testImplementation "net.kyori:adventure-api"
     testImplementation platform('org.junit:junit-bom:5.14.4')
@@ -50,34 +65,37 @@ test {
     useJUnitPlatform()
 }
 
-def targetJavaVersion = 25
+// Always pin a toolchain so each target emits the exact bytecode level its platform expects
+// (modern=25, legacy=21), regardless of which JVM Gradle itself runs on. The foojay resolver in
+// settings.gradle auto-provisions a missing JDK.
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    toolchain.languageVersion = JavaLanguageVersion.of(cfg.java)
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(cfg.java)
 }
 
 processResources {
-    def props = [version: version]
+    def props = [
+            version       : version,
+            apiVersion    : cfg.apiVersion,
+            buildTarget   : target,
+            buildMc       : cfg.mc,
+            buildJava     : cfg.java,
+            buildAdventure: cfg.adventure
+    ]
     inputs.properties props
     filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
+    filesMatching(['plugin.yml', 'lpc-build.properties']) {
         expand props
     }
 }
 
 shadowJar {
-    archiveFileName.set("LPC-${project.version}.jar")
+    def suffix = target == 'legacy' ? '-legacy' : ''
+    archiveFileName.set("LPC-${project.version}${suffix}.jar")
     mergeServiceFiles {
         exclude 'META-INF/*.DSA'
         exclude 'META-INF/*.RSA'
