@@ -20,8 +20,8 @@ permissions:
     description: Allows using colour codes and cosmetic MiniMessage tags in chat.
     default: false
   lpc.itemplaceholder:
-    description: Allows using the [item] placeholder in chat.
-    default: false
+    description: Allows using the [item] placeholder in chat. Ops get this by default; grant it to a group (e.g. /lp group default permission set lpc.itemplaceholder true) to enable for everyone.
+    default: op
   lpc.update:
     description: Receive an update notification on join when a new version is available.
     default: op

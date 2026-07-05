@@ -55,7 +55,7 @@ against an Adventure 5 runtime — the exact thing a Paper 26.2 server does.
 
 **Formatting**
 - Full [MiniMessage](https://docs.advntr.dev/minimessage/format.html) support, with group- and track-specific formats
-- Optional PlaceholderAPI integration and `[item]` placeholder (hover tooltip on Paper). `[item]` needs the `lpc.itemplaceholder` permission (default: false — grant it to the default group to enable for everyone)
+- Optional PlaceholderAPI integration and `[item]` placeholder (hover tooltip on Paper). `[item]` needs the `lpc.itemplaceholder` permission (default: **op** — ops can use it immediately; grant it to the default group to enable for everyone)
 - Per-rank message styling and per-rank **gradient names** (`{gradient-name}`)
 - Per-world toggle via `disabled-worlds`
 
@@ -97,7 +97,7 @@ against an Adventure 5 runtime — the exact thing a Paper 26.2 server does.
 |------------|---------|-------------|
 | `lpc.reload` | op | Reload the configuration |
 | `lpc.chatcolor` | false | Use colour codes & cosmetic MiniMessage tags in chat |
-| `lpc.itemplaceholder` | false | Use the `[item]` placeholder in chat |
+| `lpc.itemplaceholder` | op | Use the `[item]` placeholder in chat |
 | `lpc.update` | op | Receive an update notification on join |
 | `lpc.emoji` | true | Use emoji shortcuts (only enforced if `emoji.require-permission`) |
 | `lpc.chatlinks` | true | Have URLs turned into clickable links |

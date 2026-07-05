@@ -88,8 +88,8 @@ public final class LPC extends JavaPlugin {
             return;
         }
         send(player, MiniMessage.miniMessage().deserialize(
-                "<dark_gray>[<gradient:#B754F4:#FC00FF>LPC</gradient>] <yellow>You need the permission "
-                        + "<white>lpc.itemplaceholder</white> to use <white>[item]</white> in chat."));
+                "<dark_gray>[<gradient:#B754F4:#FC00FF>LPC</gradient>] <yellow>Ask an admin for the "
+                        + "<white>lpc.itemplaceholder</white> permission to use <white>[item]</white> in chat."));
     }
 
     public boolean isPaper() {
