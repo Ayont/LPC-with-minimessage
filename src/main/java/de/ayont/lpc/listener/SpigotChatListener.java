@@ -44,6 +44,7 @@ public class SpigotChatListener implements Listener {
             return;
         }
         String effectiveRaw = moderation.action() == ModResult.Action.TRANSFORM ? moderation.text() : event.getMessage();
+        plugin.maybeItemPlaceholderHint(player, effectiveRaw);
 
         boolean allowColor = player.hasPermission("lpc.chatcolor");
         Component base = service.messageComponent(effectiveRaw, allowColor);

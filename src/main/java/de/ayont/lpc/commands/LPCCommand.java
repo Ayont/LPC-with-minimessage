@@ -60,11 +60,12 @@ public class LPCCommand implements CommandExecutor, TabCompleter {
         plugin.send(sender, mini("<gradient:#B754F4:#FC00FF>LPC</gradient> <gray>v<white>"
                 + plugin.getDescription().getVersion() + "</white> <dark_gray>— <gray>MiniMessage chat formatter."));
         java.util.Properties build = readBuildInfo();
-        plugin.send(sender, mini("<dark_gray>Platform: <white>" + platform
-                + "</white> <dark_gray>| <gray>Build: Minecraft <white>" + build.getProperty("minecraft", "?")
-                + "</white> · Java <white>" + build.getProperty("java", "?")
-                + "</white> · Adventure <white>" + build.getProperty("adventure", "?")
-                + "</white> <dark_gray>(" + build.getProperty("target", "?") + ")"));
+        plugin.send(sender, mini("<dark_gray>Build: <gray>compiled for Minecraft <white>"
+                + build.getProperty("minecraft", "?") + "</white> <dark_gray>(Java "
+                + build.getProperty("java", "?") + " · Adventure " + build.getProperty("adventure", "?") + ")"));
+        plugin.send(sender, mini("<dark_gray>Running on: <white>" + platform + " "
+                + plugin.getServer().getBukkitVersion() + "</white> <dark_gray>(Java "
+                + System.getProperty("java.version") + ")"));
     }
 
     /** Reads the build-time target descriptor baked into the jar (or empty on failure). */

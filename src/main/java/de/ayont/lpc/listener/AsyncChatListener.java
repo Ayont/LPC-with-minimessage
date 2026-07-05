@@ -43,6 +43,7 @@ public class AsyncChatListener implements Listener {
             return;
         }
         String effectiveRaw = moderation.action() == ModResult.Action.TRANSFORM ? moderation.text() : raw;
+        plugin.maybeItemPlaceholderHint(player, effectiveRaw);
 
         boolean allowColor = player.hasPermission("lpc.chatcolor");
         Component base = service.messageComponent(effectiveRaw, allowColor);

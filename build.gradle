@@ -4,26 +4,26 @@ plugins {
 }
 
 group = 'de.ayont'
-version = project.findProperty('project_version') ?: '4.3.0'
+version = project.findProperty('project_version') ?: '4.4.0'
 
-// ─── Multi-version build target ───────────────────────────────────────────────
-// One source set, two builds. Adventure 4 (Paper 1.21) and Adventure 5 (Paper 26.2)
-// are NOT binary compatible, so we ship a dedicated jar per platform. Modrinth's
-// game-version tags route each user to the right one.
+// ─── Single universal jar ─────────────────────────────────────────────────────
+// LPC compiles ONCE against the lowest supported platform (Paper 1.21 / Adventure 4 / Java 21,
+// api-version 1.21) and that same bytecode runs on Paper 1.21.x AND Paper 26.2:
 //
-//   ./gradlew build -Ptarget=modern   (default) -> Paper 26.2 / Adventure 5 / Java 25 / api-version 26.2
-//   ./gradlew build -Ptarget=legacy               -> Paper 1.21.x / Adventure 4 / Java 21 / api-version 1.21
-def target = project.findProperty('target') ?: 'modern'
-final def TARGETS = [
-        modern: [paper: '26.2.build.40-alpha', adventure: '5.2.0',  gson: '2.14.0', java: 25, apiVersion: '26.2', mc: '26.2'],
-        legacy: [paper: '1.21.11-R0.1-SNAPSHOT', adventure: '4.23.0', gson: '2.10.1', java: 21, apiVersion: '1.21', mc: '1.21.x']
-]
-final def cfg = TARGETS[target]
-if (cfg == null) {
-    throw new GradleException("Unknown build target '${target}'. Use -Ptarget=modern or -Ptarget=legacy")
-}
-logger.lifecycle("LPC build target: {} (paper={}, adventure={}, java={}, api-version={})",
-        target, cfg.paper, cfg.adventure, cfg.java, cfg.apiVersion)
+//   * api-version 1.21 is accepted by Paper 26.2 (forward-compatibility).
+//   * Java 21 bytecode runs on Java 25.
+//   * The Adventure APIs LPC uses are binary-compatible across Adventure 4 -> 5 (the breaking
+//     changes in Adventure 5 — e.g. ClickEvent.value() removal — are NOT used by LPC). The
+//     `crossCompatTest` task proves this by running the Adventure-4-compiled test classes against
+//     an Adventure 5 runtime, simulating exactly what a Paper 26.2 server does.
+//
+// This is why there is only one jar instead of two.
+final def PAPER = '1.21.11-R0.1-SNAPSHOT'
+final def ADVENTURE = '4.23.0'
+final def ADVENTURE_NEXT = '5.2.0' // Adventure 5 runtime, used only by crossCompatTest
+final def GSON = '2.10.1'
+final def TARGET_JAVA = 21
+final def API_VERSION = '1.21'
 
 repositories {
     mavenCentral()
@@ -37,54 +37,80 @@ repositories {
     }
 }
 
+// Adventure 5 runtime for the cross-compat proof task (declared before dependencies below use it).
+configurations {
+    crossCompatTestRuntimeOnly {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:${cfg.paper}"
+    compileOnly "io.papermc.paper:paper-api:${PAPER}"
     compileOnly "net.luckperms:api:$luckpermsapi"
     compileOnly "me.clip:placeholderapi:$papi"
-    compileOnly "com.google.code.gson:gson:${cfg.gson}" // provided by the server at runtime
+    compileOnly "com.google.code.gson:gson:${GSON}" // provided by the server at runtime
 
-    // Adventure — pinned to the version the target Paper bundles (verified against the paper-api POM),
-    // so shaded (unrelocated) classes resolve from the server's bundled copy on Paper. Only the
-    // modules actually used are shaded.
-    implementation platform("net.kyori:adventure-bom:${cfg.adventure}")
+    // Adventure — pinned to what Paper 1.21 bundles; shaded UNRELOCATED so on Paper it resolves
+    // from the server's bundled copy (parent-first), and on Spigot (no Adventure) from this jar.
+    implementation platform("net.kyori:adventure-bom:${ADVENTURE}")
     implementation "net.kyori:adventure-api"
     implementation "net.kyori:adventure-text-minimessage"
     implementation "net.kyori:adventure-text-serializer-legacy"
     implementation "net.kyori:adventure-text-serializer-plain"
 
-    testImplementation "io.papermc.paper:paper-api:${cfg.paper}"
-    testImplementation platform("net.kyori:adventure-bom:${cfg.adventure}")
+    testImplementation "io.papermc.paper:paper-api:${PAPER}"
+    testImplementation platform("net.kyori:adventure-bom:${ADVENTURE}")
     testImplementation "net.kyori:adventure-text-minimessage"
     testImplementation "net.kyori:adventure-api"
     testImplementation platform('org.junit:junit-bom:5.14.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Adventure 5 — only on the cross-compat test runtime, to prove forward compatibility.
+    crossCompatTestRuntimeOnly platform("net.kyori:adventure-bom:${ADVENTURE_NEXT}")
+    crossCompatTestRuntimeOnly "net.kyori:adventure-api"
+    crossCompatTestRuntimeOnly "net.kyori:adventure-text-minimessage"
+    crossCompatTestRuntimeOnly "net.kyori:adventure-text-serializer-legacy"
+    crossCompatTestRuntimeOnly "net.kyori:adventure-text-serializer-plain"
 }
 
 test {
     useJUnitPlatform()
 }
 
-// Always pin a toolchain so each target emits the exact bytecode level its platform expects
-// (modern=25, legacy=21), regardless of which JVM Gradle itself runs on. The foojay resolver in
-// settings.gradle auto-provisions a missing JDK.
+// Cross-compatibility proof: the main + test classes are compiled against Adventure 4, but this
+// task runs the SAME tests with Adventure 5 on the classpath — i.e. exactly what a Paper 26.2
+// server does. Green == the universal jar is safe on both platforms.
+tasks.register('crossCompatTest', Test) {
+    description = 'Runs the Adventure-4-compiled tests against an Adventure 5 runtime (forward-compat proof).'
+    group = 'verification'
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.test.output.classesDirs
+    // Take the normal test runtime classpath, strip the Adventure 4 jars, add Adventure 5.
+    def withoutAdventure = sourceSets.test.runtimeClasspath.filter { file ->
+        !(file.name.toLowerCase().contains('adventure'))
+    }
+    classpath = sourceSets.test.output + withoutAdventure + configurations.crossCompatTestRuntimeOnly
+}
+
 java {
-    toolchain.languageVersion = JavaLanguageVersion.of(cfg.java)
+    toolchain.languageVersion = JavaLanguageVersion.of(TARGET_JAVA)
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release.set(cfg.java)
+    options.release.set(TARGET_JAVA)
 }
 
 processResources {
     def props = [
             version       : version,
-            apiVersion    : cfg.apiVersion,
-            buildTarget   : target,
-            buildMc       : cfg.mc,
-            buildJava     : cfg.java,
-            buildAdventure: cfg.adventure
+            apiVersion    : API_VERSION,
+            buildTarget   : 'universal',
+            buildMc       : '1.21.x–26.2',
+            buildJava     : TARGET_JAVA,
+            buildAdventure: ADVENTURE
     ]
     inputs.properties props
     filteringCharset 'UTF-8'
@@ -94,19 +120,21 @@ processResources {
 }
 
 shadowJar {
-    def suffix = target == 'legacy' ? '-legacy' : ''
-    archiveFileName.set("LPC-${project.version}${suffix}.jar")
+    archiveFileName.set("LPC-${project.version}.jar")
     mergeServiceFiles {
         exclude 'META-INF/*.DSA'
         exclude 'META-INF/*.RSA'
     }
 }
 
-// The plain (dependency-less) jar would not run on a server, so only ship the shaded jar.
 jar {
     enabled = false
 }
 
 tasks.named('assemble') {
     dependsOn tasks.named('shadowJar')
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('crossCompatTest')
 }
