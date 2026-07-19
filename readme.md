@@ -190,3 +190,9 @@ Requires JDK 25.
   inject commands or fake tooltips.
 - **Not affiliated with LuckPerms** – please do not contact the LuckPerms author for support.
 - Legacy version available at: [GitHub Legacy LPC](https://github.com/wikmor/LPC)
+
+---
+
+## 📄 License
+
+Released under the [MIT License](LICENSE) — matching the license declared on Modrinth.
