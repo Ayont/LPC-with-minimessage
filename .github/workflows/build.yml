@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       # Gradle runs on Java 21; that is also the compile target for the universal jar.
       - name: Set up Java 21
         uses: actions/setup-java@v5
