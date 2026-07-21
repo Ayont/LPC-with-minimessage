@@ -19,7 +19,7 @@ version = project.findProperty('project_version') ?: '4.4.0'
 //
 // This is why there is only one jar instead of two.
 final def PAPER = '1.21.11-R0.1-SNAPSHOT'
-final def ADVENTURE = '4.23.0'
+final def ADVENTURE = '4.26.1'
 final def ADVENTURE_NEXT = '5.2.0' // Adventure 5 runtime, used only by crossCompatTest
 final def GSON = '2.10.1'
 final def TARGET_JAVA = 21
