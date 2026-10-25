@@ -143,7 +143,8 @@ public final class ChatFormatService {
             format = PlaceholderAPI.setPlaceholders(source, format);
         }
 
-        return trustedMiniMessage.deserialize(format, Placeholder.component(messageTag, styledMessage));
+        return trustedMiniMessage.deserialize(
+                LegacyColors.toMiniMessage(format), Placeholder.component(messageTag, styledMessage));
     }
 
     /**
@@ -158,7 +159,7 @@ public final class ChatFormatService {
         if (hasPapi) {
             format = PlaceholderAPI.setPlaceholders(player, format);
         }
-        return trustedMiniMessage.deserialize(format, extra);
+        return trustedMiniMessage.deserialize(LegacyColors.toMiniMessage(format), extra);
     }
 
     private Component applyMessageStyle(String group, Component message) {
@@ -172,7 +173,8 @@ public final class ChatFormatService {
         // The style template is operator-authored (trusted); the safe message is nested via a
         // placeholder so it is wrapped, never re-parsed.
         String wrapped = style.replace(MESSAGE_TOKEN, "<" + STYLE_INNER_TAG + ">");
-        return trustedMiniMessage.deserialize(wrapped, Placeholder.component(STYLE_INNER_TAG, message));
+        return trustedMiniMessage.deserialize(
+                LegacyColors.toMiniMessage(wrapped), Placeholder.component(STYLE_INNER_TAG, message));
     }
 
     private String resolveMessageStyle(String group) {

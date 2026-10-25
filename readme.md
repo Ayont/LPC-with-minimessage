@@ -155,7 +155,7 @@ reload-message: "<green>Reloaded LPC configuration!"
 | `{prefixes}` / `{suffixes}` | All prefixes / suffixes, highest priority first |
 | `{username-color}` / `{message-color}` | Colour values from LuckPerms meta |
 
-> ℹ️ All colour values (prefix, suffix, etc.) must be in **MiniMessage** format – no legacy codes (`&a`, `§b`).
+> ℹ️ MiniMessage is recommended for colour values (prefix, suffix, etc.). Legacy colour and formatting codes (`&a`, `§b`) are also supported.
 
 ---
 

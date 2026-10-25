@@ -19,7 +19,7 @@
 #   {username-color}  - the 'username-color' LuckPerms meta value
 #   {message-color}   - the 'message-color' LuckPerms meta value
 #
-# NOTE: Prefixes, suffixes and colors must use MiniMessage, not legacy (&a / §b) codes.
+# MiniMessage is recommended for prefixes, suffixes and colors; legacy (&a / §b) codes are also accepted.
 # PlaceholderAPI placeholders (%...%) are supported inside formats when PlaceholderAPI is installed.
 
 # Main chat format.
